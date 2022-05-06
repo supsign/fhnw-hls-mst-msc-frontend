@@ -4,12 +4,11 @@
         <select
             id="select"
             class="block py-2 px-4 w-full box-border border rounded-lg border-gray-200 shadow-md text-gray-900"
-            :value="modelValue"
+            v-model="value"
             @change="emits('change')"
-            @input="emits('update:modelValue', $event.target.value)"
         >
             <template v-if="options.length > 0">
-                <option v-if="placeholder" value disabled selected>{{ placeholder }}</option>
+                <option v-if="placeholder" value="undefined" disabled selected>{{ placeholder }}</option>
                 <option v-for="(option, index) in options" :key="index" :value="option" class="border-t border-gray-50">
                     {{ options_label ? option[options_label] : option['name'] }}
                 </option>
@@ -21,6 +20,9 @@
     </div>
 </template>
 <script setup lang="ts">
+import { computed } from '@vue/reactivity';
+import { ref } from 'vue';
+
 const props = defineProps({
     label: String,
     options: { type: Array, required: true },
@@ -30,4 +32,13 @@ const props = defineProps({
 });
 
 const emits = defineEmits(['change', 'update:modelValue']);
+
+const value = computed({
+    get() {
+        return props.modelValue;
+    },
+    set(value) {
+        emits('update:modelValue', value);
+    },
+});
 </script>
