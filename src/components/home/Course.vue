@@ -8,13 +8,31 @@
         </div>
         <div class="border-b flex gap-5">
             <div class="w-20 text-center flex justify-center">
-                <input type="radio" class="h-5 w-5 my-auto" v-model="selectedSemester" value="none" />
+                <input
+                    type="radio"
+                    class="h-5 w-5 my-auto"
+                    v-model="selectedSemester"
+                    value="none"
+                    @change="addCourse"
+                />
             </div>
             <div v-for="(semester, index) in semesters" :key="index" class="w-20 text-center flex justify-center">
-                <input type="radio" class="h-5 w-5 my-auto" v-model="selectedSemester" :value="semester.id" />
+                <input
+                    type="radio"
+                    class="h-5 w-5 my-auto"
+                    v-model="selectedSemester"
+                    :value="semester.id"
+                    @change="addCourse"
+                />
             </div>
             <div class="w-20 text-center flex justify-center border-r">
-                <input type="radio" class="h-5 w-5 my-auto" v-model="selectedSemester" value="later" />
+                <input
+                    type="radio"
+                    class="h-5 w-5 my-auto"
+                    v-model="selectedSemester"
+                    value="later"
+                    @change="addCourse"
+                />
             </div>
         </div>
     </div>
@@ -28,8 +46,13 @@ const props = defineProps({
     course: { type: Object as PropType<Course>, required: true },
     type: String,
 });
+const emits = defineEmits(['addCourse']);
 
 const semesters: Array<Semester> | undefined = inject('semesters');
 
 const selectedSemester: Ref<String | Number> = ref('none');
+
+function addCourse() {
+    emits('addCourse', props.course.id, selectedSemester.value);
+}
 </script>

@@ -21,7 +21,7 @@
                 :key="index"
                 :course="course"
                 :type="group.course_group_type_short_name"
-                @addCour
+                @addCourse="addCourse"
             />
         </div>
     </div>
@@ -30,11 +30,55 @@
 import { inject, PropType } from 'vue';
 import { CourseGroup } from '../../interfaces/courseData.interface';
 import { Semester } from '../../interfaces/semester.interface';
+import { SelectedCourses } from '../../interfaces/selectedCourses.interface';
 import Course from './Course.vue';
 
 const props = defineProps({
     group: { type: Object as PropType<CourseGroup>, required: true },
-    selectedCourses: Array,
+    selectedCourses: { type: Array as PropType<Array<SelectedCourses>>, required: true },
 });
 const semesters: Array<Semester> | undefined = inject('semesters');
+
+function addCourse(courseId: number, semesterId: number | string) {
+    removeExistingCourse(courseId);
+    const semesterIndex = checkIfSemesterExists(semesterId);
+    if (semesterIndex > -1) {
+        return props.selectedCourses[semesterIndex].courses.push(courseId);
+    }
+    if (semesterId !== 'none') {
+        const courses = [];
+        courses.push(courseId);
+        return props.selectedCourses.push({ semesterId, courses });
+    }
+}
+
+function removeExistingCourse(courseId: number) {
+    if (!props.selectedCourses.length) {
+        return;
+    }
+    for (const i in props.selectedCourses) {
+        const index = props.selectedCourses[i].courses.findIndex((id) => id === courseId);
+        if (index > -1) {
+            props.selectedCourses[i].courses.splice(index, 1);
+            removeSemesterWhenEmpty(Number(i));
+        }
+    }
+}
+
+function checkIfSemesterExists(semesterId: number | string) {
+    if (!props.selectedCourses.length) {
+        return -1;
+    }
+    return props.selectedCourses.findIndex((selectionGroup) => selectionGroup.semesterId === semesterId);
+}
+/**
+ * Delete selectedCourses Object if Courses are empty
+ *
+ * @param index
+ */
+function removeSemesterWhenEmpty(index: number) {
+    if (!props.selectedCourses[index].courses.length) {
+        props.selectedCourses.splice(index, 1);
+    }
+}
 </script>
