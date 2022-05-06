@@ -4,10 +4,14 @@
         <select
             id="select"
             class="block py-2 px-4 w-full box-border border rounded-lg border-gray-200 shadow-md text-gray-900"
+            :value="modelValue"
+            @change="emits('change')"
+            @input="emits('update:modelValue', $event.target.value)"
         >
             <template v-if="options.length > 0">
+                <option v-if="placeholder" value disabled selected>{{ placeholder }}</option>
                 <option v-for="(option, index) in options" :key="index" :value="option" class="border-t border-gray-50">
-                    {{ option['optios_label'] }}
+                    {{ options_label ? option[options_label] : option['name'] }}
                 </option>
             </template>
             <template v-else>
@@ -17,12 +21,13 @@
     </div>
 </template>
 <script setup lang="ts">
-import 'vue-select/dist/vue-select.css';
-import vSelect from 'vue-select';
-
 const props = defineProps({
     label: String,
     options: { type: Array, required: true },
     options_label: String,
+    placeholder: String,
+    modelValue: Object,
 });
+
+const emits = defineEmits(['change', 'update:modelValue']);
 </script>
