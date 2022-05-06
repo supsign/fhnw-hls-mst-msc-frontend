@@ -8,7 +8,7 @@
             :selectedCourses="selectedCourses"
         />
         <FurtherCourseGroup
-            v-for="(group, index) in courseData.courses[0]"
+            v-for="(group, index) in courseData.courses[1]"
             :key="index"
             :group="group"
             :selectedCourses="selectedCourses"
