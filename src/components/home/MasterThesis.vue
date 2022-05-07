@@ -9,11 +9,12 @@
             multiple
             :size="data.theses.length"
         />
+        <input />
     </div>
 </template>
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
-import { PropType, ref, WritableComputedRef } from 'vue';
+import { PropType } from 'vue';
 import { Theses, ThesesSelection } from '../../interfaces/theses.interface';
 
 const props = defineProps({

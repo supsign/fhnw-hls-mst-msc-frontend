@@ -3,26 +3,29 @@
         <Card>
             <Personal @getCourseData="getCourseData" @updatePersonalData="updatePersonalData" />
         </Card>
-        <!-- <Card v-if="courseData">
-            {{ selectedCourses }}
+        <Card v-if="courseData">
             <CourseSelection :course-data="courseData" @updateSelectedCoursesData="updateSelectedCoursesData" />
-        </Card>-->
+        </Card>
         <Card v-if="courseData && masterThesisData">
             <ModulesOutside :texts="courseData.texts" @updateModulesOutsideData="updateModulesOutsideData" />
             <DoubleDegree :texts="courseData.texts" v-model="doubleDegree" />
             <MasterThesis :data="masterThesisData" v-model="masterThesis" />
-            <OptionalEnglish />
+
+            <OptionalEnglish
+                v-model="optionalCourses"
+                :optional-courses="courseData.optional_courses"
+                :selectedCourses="selectedCourses"
+                :semesters="courseData.semesters"
+            />
             <AdditionalComments v-model="additionalComments" />
         </Card>
-        <button @click="createPdf(personalData)" class="p-1 bg-blue-500">SUBMIT</button>
+        <button @click="createPdf" class="p-1 bg-blue-500">SUBMIT</button>
     </div>
 </template>
 <script setup lang="ts">
 import Personal from '../components/home/Personal.vue';
-import CourseSelection from '../components/home/CourseSelection.vue';
-
 import axios from 'axios';
-import { Ref, ref } from 'vue';
+import { Ref, ref, watch } from 'vue';
 import ModulesOutside from '../components/home/ModulesOutside.vue';
 import DoubleDegree from '../components/home/DoubleDegree.vue';
 import OptionalEnglish from '../components/home/OptionalEnglish.vue';
@@ -33,21 +36,24 @@ import { CourseDataResponse } from '../interfaces/courseData.interface';
 import { OutsideModule } from '../interfaces/outsideModule.interface';
 import MasterThesis from '../components/home/MasterThesis.vue';
 import { Theses, ThesesSelection } from '../interfaces/theses.interface';
-import { whenever } from '@vueuse/core';
+import CourseSelection from '../components/home/CourseSelection.vue';
 
 const courseData: Ref<CourseDataResponse | undefined> = ref();
 const personalData: Ref<PersonalData | undefined> = ref();
 const selectedCourses = ref();
 const outsideModules: Ref<Array<OutsideModule> | undefined> = ref();
+const modulesOutside: Ref<Array<OutsideModule> | undefined> = ref();
 const doubleDegree = ref(false);
 const masterThesisData: Ref<Theses | undefined> = ref();
 const masterThesis: Ref<ThesesSelection> = ref({ start: undefined, theses: [] });
 const additionalComments = ref();
+const optionalCourses = ref();
 
 async function getCourseData(personalData: PersonalData) {
     if (!personalData.specialization || !personalData.studyMode || !personalData.semester) {
         return;
     }
+
     const response = await axios.post(`/coursedata/${personalData.specialization.id}`, {
         study_mode: personalData.studyMode.id,
         semester: personalData.semester.id,
@@ -56,7 +62,7 @@ async function getCourseData(personalData: PersonalData) {
     getThesisData();
 }
 
-whenever(doubleDegree.value, () => getThesisData());
+watch(doubleDegree, () => getThesisData());
 
 async function getThesisData() {
     if (!personalData.value?.specialization || !personalData.value.semester || !personalData.value.studyMode) {
@@ -96,6 +102,7 @@ async function createPdf() {
         modules_outside: outsideModules.value,
         double_degree: doubleDegree.value,
         master_thesis: masterThesis.value,
+        optional_english: optionalCourses.value,
         additional_comments: additionalComments.value,
     });
 }

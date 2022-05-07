@@ -7,6 +7,7 @@ export interface CourseDataResponse {
     semesters: Semester[];
     texts: Array<{ id: number; name: string; content: string }>;
     theses: [];
+    optional_courses: { courses: Course; texts: [] };
 }
 
 export interface CourseGroup extends Model {
