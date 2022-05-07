@@ -22,7 +22,7 @@
 import { onBeforeMount, Ref, ref } from 'vue';
 import axios from 'axios';
 import { PersonalDataResponse, PersonalData } from '../../interfaces/personalData.interface';
-import { useAsyncState, whenever } from '@vueuse/core';
+import { whenever } from '@vueuse/core';
 
 const emits = defineEmits(['getCourseData', 'updatePersonalData']);
 

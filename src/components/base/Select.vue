@@ -6,6 +6,7 @@
             class="block py-2 px-4 w-full box-border border rounded-lg border-gray-200 shadow-md text-gray-900"
             v-model="value"
             @change="emits('change')"
+            v-bind="$attrs"
         >
             <template v-if="options.length > 0">
                 <option v-if="placeholder" value="undefined" disabled selected>{{ placeholder }}</option>
