@@ -10,13 +10,7 @@
             <ModulesOutside :texts="courseData.texts" @updateModulesOutsideData="updateModulesOutsideData" />
             <DoubleDegree :texts="courseData.texts" v-model="doubleDegree" />
             <MasterThesis :data="masterThesisData" v-model="masterThesis" />
-
-            <OptionalEnglish
-                v-model="optionalCourses"
-                :optional-courses="courseData.optional_courses"
-                :selectedCourses="selectedCourses"
-                :semesters="courseData.semesters"
-            />
+            <OptionalEnglish v-model="optionalCourses" :course-data="courseData" :selectedCourses="selectedCourses" />
             <AdditionalComments v-model="additionalComments" />
         </Card>
         <button @click="createPdf" class="p-1 bg-blue-500">SUBMIT</button>
@@ -25,7 +19,7 @@
 <script setup lang="ts">
 import Personal from '../components/home/Personal.vue';
 import axios from 'axios';
-import { Ref, ref, watch } from 'vue';
+import { provide, Ref, ref, watch } from 'vue';
 import ModulesOutside from '../components/home/ModulesOutside.vue';
 import DoubleDegree from '../components/home/DoubleDegree.vue';
 import OptionalEnglish from '../components/home/OptionalEnglish.vue';
@@ -87,7 +81,14 @@ function updateModulesOutsideData(modulesOutside: Array<OutsideModule>) {
     modulesOutside.pop();
     outsideModules.value = modulesOutside;
 }
-
+function parseMasterThesis(masterThesis: ThesesSelection) {
+    return {
+        start: masterThesis.start.id,
+        theses: masterThesis.theses.map((theses) => {
+            return theses.id;
+        }),
+    };
+}
 async function createPdf() {
     if (!personalData.value) {
         return;
@@ -101,7 +102,7 @@ async function createPdf() {
         selected_courses: selectedCourses.value,
         modules_outside: outsideModules.value,
         double_degree: doubleDegree.value,
-        master_thesis: masterThesis.value,
+        master_thesis: parseMasterThesis(masterThesis.value),
         optional_english: optionalCourses.value,
         additional_comments: additionalComments.value,
     });

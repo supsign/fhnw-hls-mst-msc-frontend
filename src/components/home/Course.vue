@@ -18,6 +18,7 @@
             </div>
             <div v-for="(semester, index) in semesters" :key="index" class="w-20 text-center flex justify-center">
                 <input
+                    v-if="semester.type === course.semester_type"
                     type="radio"
                     class="h-5 w-5 my-auto"
                     v-model="selectedSemester"
@@ -38,18 +39,18 @@
     </div>
 </template>
 <script setup lang="ts">
-import { inject, PropType, Ref, ref } from 'vue';
-import { Course } from '../../interfaces/courseData.interface';
+import { computed } from '@vue/reactivity';
+import { PropType, Ref, ref } from 'vue';
+import { ICourse } from '../../interfaces/course.interface';
 import { Semester } from '../../interfaces/semester.interface';
 
 const props = defineProps({
-    course: { type: Object as PropType<Course>, required: true },
+    course: { type: Object as PropType<ICourse>, required: true },
+    semesters: Array as PropType<Array<Semester>>,
     type: String,
     further: Boolean,
 });
 const emits = defineEmits(['addCourse']);
-
-const semesters: Array<Semester> | undefined = inject('semesters');
 
 const selectedSemester: Ref<String | Number> = ref('none');
 

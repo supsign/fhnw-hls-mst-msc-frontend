@@ -29,10 +29,11 @@
                     </div>
                 </div>
                 <Course
-                    v-for="course in specialization.courses"
+                    v-for="course in sortCourses(specialization.courses)"
                     :key="index"
                     :course="course"
                     further
+                    :semesters="semesters"
                     @addCourse="addCourse"
                 />
             </div>
@@ -51,10 +52,11 @@
                     </div>
                 </div>
                 <Course
-                    v-for="course in cluster.courses"
+                    v-for="course in sortCourses(cluster.courses)"
                     :key="index"
                     :course="course"
                     further
+                    :semesters="semesters"
                     @addCourse="addCourse"
                 />
             </div>
@@ -62,10 +64,11 @@
         <template v-if="group.courses">
             <div class="max-w-min">
                 <Course
-                    v-for="(course, index) in group.courses"
+                    v-for="(course, index) in sortCourses(group.courses)"
                     :key="index"
                     :course="course"
                     :type="group.course_group_type_short_name"
+                    :semesters="semesters"
                     @addCourse="addCourse"
                 />
             </div>
@@ -73,8 +76,9 @@
     </div>
 </template>
 <script setup lang="ts">
-import { inject, PropType } from 'vue';
+import { PropType } from 'vue';
 import { CourseGroup } from '../../interfaces/courseData.interface';
+import { ICourse } from '../../interfaces/course.interface';
 import { Semester } from '../../interfaces/semester.interface';
 import { SelectedCourses } from '../../interfaces/selectedCourses.interface';
 import Course from './Course.vue';
@@ -82,8 +86,12 @@ import Course from './Course.vue';
 const props = defineProps({
     group: { type: Object as PropType<CourseGroup>, required: true },
     selectedCourses: { type: Array as PropType<Array<SelectedCourses>>, required: true },
+    semesters: Array as PropType<Array<Semester>>,
 });
-const semesters: Array<Semester> | undefined = inject('semesters');
+
+function sortCourses(courses: Array<ICourse>) {
+    return courses.sort((a, b) => a.semester_type - b.semester_type);
+}
 
 /**
  * Add Course

@@ -1,11 +1,13 @@
 <template>
-    <div v-if="courseData">
-        <div v-for="(courses, index) in courseData.courses" :key="index" class="flex flex-col gap-10 mt-10">
+    <div v-if="courseData" class="flex flex-col gap-10 mt-10">
+        {{ selectedCourses }}
+        <div v-for="(courses, index) in courseData.courses" :key="index">
             <CourseGroup
                 v-for="(group, index) in courses"
                 :key="index"
                 :group="group"
                 :selectedCourses="selectedCourses"
+                :semesters="courseData.semesters"
             />
         </div>
     </div>
@@ -20,8 +22,6 @@ const props = defineProps({
 });
 
 const emits = defineEmits(['updateSelectedCoursesData']);
-
-provide('semesters', props.courseData.semesters);
 
 const selectedCourses = ref([]);
 

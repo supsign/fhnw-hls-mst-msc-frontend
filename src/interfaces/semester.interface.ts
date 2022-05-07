@@ -9,4 +9,5 @@ export interface Semester extends Model {
     start_date: string;
     tooltip: string;
     year: number;
+    type: number;
 }
