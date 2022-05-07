@@ -27,7 +27,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
         semester: data.semester?.id,
         study_mode: data.studyMode?.id,
         specialization: data.specialization?.id,
-        selected_courses: data.selectedCourses,
+        selected_courses: data.courseData,
         modules_outside: data.outsideModules,
         double_degree: data.doubleDegree,
         master_thesis: parseMasterThesis(data.masterThesis),

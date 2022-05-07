@@ -114,16 +114,16 @@ async function createPdf() {
     }
     const pdfData = pdfDataService({
         surname: personalData.value.surname,
-        given_name: personalData.value.givenName,
-        semester: personalData.value.semester?.id,
-        study_mode: personalData.value.studyMode?.id,
-        specialization: personalData.value.specialization?.id,
-        selected_courses: selectedCourses.value,
-        modules_outside: outsideModules.value,
-        double_degree: doubleDegree.value,
-        master_thesis: parseMasterThesis(masterThesis.value),
-        optional_english: optionalCourses.value,
-        additional_comments: additionalComments.value,
+        givenName: personalData.value.givenName,
+        semester: personalData.value.semester,
+        studyMode: personalData.value.studyMode,
+        specialization: personalData.value.specialization,
+        courseData: selectedCourses.value,
+        outsideModules: outsideModules.value,
+        doubleDegree: doubleDegree.value,
+        masterThesis: masterThesis.value,
+        optionalCourses: optionalCourses.value,
+        additionalComments: additionalComments.value,
         ects: ects.value,
     });
     const validData = validateData(pdfData);
