@@ -1,7 +1,6 @@
 <template>
     <div v-if="courseData" class="flex flex-col gap-10 mt-10">
-        {{ selectedCourses }}
-        <div v-for="(courses, index) in courseData.courses" :key="index">
+        <div v-for="(courses, index) in courseData.courses" :key="index" class="flex flex-col gap-10">
             <CourseGroup
                 v-for="(group, index) in courses"
                 :key="index"

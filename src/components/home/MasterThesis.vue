@@ -9,7 +9,14 @@
             multiple
             :size="data.theses.length"
         />
-        <input />
+        <div>
+            <label for="furtherDetails" class="px-1 bg-white text-gray-400">Further Details</label>
+            <textarea
+                id="furtherDetails"
+                v-model="value.furtherDetails"
+                class="block py-2 px-4 w-full box-border border rounded-lg border-gray-200 shadow-md text-gray-900"
+            />
+        </div>
     </div>
 </template>
 <script setup lang="ts">

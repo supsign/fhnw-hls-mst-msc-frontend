@@ -82,11 +82,15 @@ function updateModulesOutsideData(modulesOutside: Array<OutsideModule>) {
     outsideModules.value = modulesOutside;
 }
 function parseMasterThesis(masterThesis: ThesesSelection) {
+    if (!masterThesis) {
+        return masterThesis;
+    }
     return {
         start: masterThesis.start.id,
         theses: masterThesis.theses.map((theses) => {
             return theses.id;
         }),
+        further_details: masterThesis.furtherDetails,
     };
 }
 async function createPdf() {
