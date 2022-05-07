@@ -7,12 +7,26 @@
                 <Input label="Module Title" v-model="module.title" />
                 <Input label="ECTS" type="number" v-model="module.ects" />
                 <Input label="University" v-model="module.university" />
+                <div
+                    v-if="index"
+                    @click="outsideModules.splice(index, 1)"
+                    class="transition transform duration-300 ease-in-out text-white py-1 px-4 rounded-md shadow-sm bg-red-600 hover:bg-red-700 hover:shadow-xl cursor-pointer h-10 flex items-center mt-6"
+                >
+                    Remove
+                </div>
+            </div>
+            <div>
+                <button
+                    @click="addNewModule"
+                    class="transition transform duration-300 ease-in-out text-white py-1 px-4 rounded-md shadow-sm bg-blue-700 hover:bg-blue-800 hover:shadow-xl cursor-pointer"
+                >
+                    New Module
+                </button>
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { whenever } from '@vueuse/core';
 import { Ref, ref } from 'vue';
 import { OutsideModule } from '../../interfaces/outsideModule.interface';
 const props = defineProps({
@@ -20,18 +34,9 @@ const props = defineProps({
 });
 const emits = defineEmits(['updateModulesOutsideData']);
 const description = props.texts?.find((text) => text.name === 'modules_outside_description');
-const outsideModules: Ref<Array<OutsideModule>> = ref([]);
+const outsideModules: Ref<Array<OutsideModule>> = ref([{ title: '', ects: undefined, university: '' }]);
 
-function prefill() {
-    outsideModules.value.push({ title: undefined, ects: undefined, university: undefined });
+function addNewModule() {
+    outsideModules.value.push({ title: '', ects: undefined, university: '' });
 }
-prefill();
-
-whenever(outsideModules.value, (value: Array<OutsideModule>) => {
-    const lastItem = value[value.length - 1];
-    if (lastItem.title && lastItem.ects && lastItem.university) {
-        outsideModules.value.push({ title: undefined, ects: undefined, university: undefined });
-        emits('updateModulesOutsideData', outsideModules.value);
-    }
-});
 </script>

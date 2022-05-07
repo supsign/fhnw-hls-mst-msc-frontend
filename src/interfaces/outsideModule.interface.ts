@@ -1,5 +1,5 @@
 export interface OutsideModule {
     title: string;
-    ects: number;
+    ects: number | undefined;
     university: string;
 }
