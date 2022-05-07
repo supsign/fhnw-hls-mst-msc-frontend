@@ -1,46 +1,32 @@
 <template>
     <div class="flex hover:bg-gray-50">
-        <div class="w-[26rem] border-b border-l border-r p-1">
+        <div class="w-[26rem] border-b border-l border-r p-1" :title="course.content">
             {{ course.name }}
         </div>
-        <div class="w-10 border-r border-b p-1" v-if="!further">
+        <div class="w-10 border-r border-b p-1" v-if="!further" :title="tooltip">
             {{ type }}
         </div>
         <div class="border-b flex gap-5">
             <div class="w-20 text-center flex justify-center">
-                <input
-                    type="radio"
-                    class="h-5 w-5 my-auto"
-                    v-model="selectedSemester"
-                    value="none"
-                    @change="addCourse"
-                />
+                <input type="radio" class="h-5 w-5 my-auto" v-model="course.selected_semester" :value="null" />
             </div>
             <div v-for="(semester, index) in semesters" :key="index" class="w-20 text-center flex justify-center">
                 <input
                     v-if="semester.type === course.semester_type"
                     type="radio"
                     class="h-5 w-5 my-auto"
-                    v-model="selectedSemester"
-                    :value="semester.id"
-                    @change="addCourse"
+                    v-model="course.selected_semester"
+                    :value="semester"
                 />
             </div>
             <div class="w-20 text-center flex justify-center border-r">
-                <input
-                    type="radio"
-                    class="h-5 w-5 my-auto"
-                    v-model="selectedSemester"
-                    value="later"
-                    @change="addCourse"
-                />
+                <input type="radio" class="h-5 w-5 my-auto" v-model="course.selected_semester" value="later" />
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/reactivity';
-import { PropType, Ref, ref } from 'vue';
+import { PropType } from 'vue';
 import { ICourse } from '../../interfaces/course.interface';
 import { Semester } from '../../interfaces/semester.interface';
 
@@ -49,12 +35,7 @@ const props = defineProps({
     semesters: Array as PropType<Array<Semester>>,
     type: String,
     further: Boolean,
+    tooltip: String,
 });
-const emits = defineEmits(['addCourse']);
-
-const selectedSemester: Ref<String | Number> = ref('none');
-
-function addCourse() {
-    emits('addCourse', props.course, selectedSemester.value);
-}
+props.course.selected_semester = null;
 </script>

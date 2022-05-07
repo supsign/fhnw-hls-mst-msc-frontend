@@ -23,6 +23,7 @@ export interface CourseGroup extends Model {
     type: number;
     specializations: Specialization[];
     clusters: Cluster[];
+    tooltip: string;
 }
 
 export interface Cluster extends Model {

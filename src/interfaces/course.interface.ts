@@ -9,4 +9,5 @@ export interface ICourse extends Model {
     name: string;
     short_name: string;
     semester_type: number;
+    selected_semester: Semester | String | null;
 }

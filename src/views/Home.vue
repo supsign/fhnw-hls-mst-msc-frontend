@@ -43,6 +43,9 @@ import MasterThesis from '../components/home/MasterThesis.vue';
 import { Theses, ThesesSelection } from '../interfaces/theses.interface';
 import CourseSelection from '../components/home/CourseSelection.vue';
 import { computed } from '@vue/reactivity';
+import { validateData } from '../helpers/validation';
+import Card from '../components/base/Card.vue';
+import { pdfDataService } from '../services/pdfData.service';
 
 const courseData: Ref<CourseDataResponse | undefined> = ref();
 const personalData: Ref<PersonalData | undefined> = ref();
@@ -105,23 +108,11 @@ function updateModulesOutsideData(modulesOutside: Array<OutsideModule>) {
     modulesOutside.pop();
     outsideModules.value = modulesOutside;
 }
-function parseMasterThesis(masterThesis: ThesesSelection) {
-    if (!masterThesis) {
-        return masterThesis;
-    }
-    return {
-        start: masterThesis.start.id,
-        theses: masterThesis.theses.map((theses) => {
-            return theses.id;
-        }),
-        further_details: masterThesis.furtherDetails,
-    };
-}
 async function createPdf() {
     if (!personalData.value) {
         return;
     }
-    axios.post('/pdf', {
+    const pdfData = pdfDataService({
         surname: personalData.value.surname,
         given_name: personalData.value.givenName,
         semester: personalData.value.semester?.id,
@@ -133,6 +124,10 @@ async function createPdf() {
         master_thesis: parseMasterThesis(masterThesis.value),
         optional_english: optionalCourses.value,
         additional_comments: additionalComments.value,
+        ects: ects.value,
     });
+    const validData = validateData(pdfData);
+
+    axios.post('/pdf', validData);
 }
 </script>

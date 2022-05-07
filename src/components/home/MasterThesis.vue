@@ -10,7 +10,9 @@
             :size="data.theses.length"
         />
         <div>
-            <label for="furtherDetails" class="px-1 bg-white text-gray-400">Further Details</label>
+            <label for="furtherDetails" class="px-1 bg-white text-gray-400"
+                >Further Details on MSc Topic (optional)</label
+            >
             <textarea
                 id="furtherDetails"
                 v-model="value.furtherDetails"
@@ -23,6 +25,7 @@
 import { computed } from '@vue/reactivity';
 import { PropType } from 'vue';
 import { Theses, ThesesSelection } from '../../interfaces/theses.interface';
+import Select from '../base/Select.vue';
 
 const props = defineProps({
     data: Object as PropType<Theses>,

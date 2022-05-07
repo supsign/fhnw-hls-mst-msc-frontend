@@ -5,6 +5,7 @@
         <Input label="Given Name" v-model="personalData.givenName" />
         <Select label="Semester" :options="data.semesters" v-model="personalData.semester" />
         <Select
+            :title="data.studyMode.tooltip"
             label="Study Mode"
             :options="data.studyMode.studyModes"
             options_label="label"
@@ -23,6 +24,8 @@ import { onBeforeMount, Ref, ref } from 'vue';
 import axios from 'axios';
 import { PersonalDataResponse, PersonalData } from '../../interfaces/personalData.interface';
 import { whenever } from '@vueuse/core';
+import Input from '../base/Input.vue';
+import Select from '../base/Select.vue';
 
 const emits = defineEmits(['getCourseData', 'updatePersonalData']);
 

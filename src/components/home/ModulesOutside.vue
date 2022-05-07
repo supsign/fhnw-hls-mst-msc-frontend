@@ -29,6 +29,7 @@
 <script setup lang="ts">
 import { Ref, ref } from 'vue';
 import { OutsideModule } from '../../interfaces/outsideModule.interface';
+import Input from '../base/Input.vue';
 const props = defineProps({
     texts: Array,
 });

@@ -4,7 +4,6 @@
             v-for="(group, index) in courseData.courses[0]"
             :key="index"
             :group="group"
-            :selectedCourses="selectedCourses"
             :semesters="courseData.semesters"
         />
         <EctsCount :texts="courseData.texts" :ects="ects" />
@@ -12,7 +11,6 @@
             v-for="(group, index) in courseData.courses[1]"
             :key="index"
             :group="group"
-            :selectedCourses="selectedCourses"
             :semesters="courseData.semesters"
         />
     </div>
@@ -29,10 +27,4 @@ const props = defineProps({
 });
 
 const emits = defineEmits(['updateSelectedCoursesData']);
-
-const selectedCourses = ref([]);
-
-whenever(selectedCourses.value, (value) => {
-    emits('updateSelectedCoursesData', value);
-});
 </script>
