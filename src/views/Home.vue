@@ -4,7 +4,8 @@
             <Personal @getCourseData="getCourseData" @updatePersonalData="updatePersonalData" />
         </Card>
         <Card v-if="courseData">
-            <CourseSelection :course-data="courseData" />
+            {{ selectedCourses }}
+            <CourseSelection :course-data="courseData" @updateSelectedCoursesData="updateSelectedCoursesData" />
         </Card>
         <Card v-if="courseData">
             <ModulesOutside />
@@ -28,10 +29,11 @@ import MasterThesis from '../components/home/MasterThesis.vue';
 import OptionalEnglish from '../components/home/OptionalEnglish.vue';
 import AdditionalComments from '../components/home/AdditionalComments.vue';
 import { PersonalData } from '../interfaces/personalData.interface';
+import { SelectedCourses } from '../interfaces/selectedCourses.interface';
 
 const courseData = ref();
 const personalData: Ref<PersonalData | undefined> = ref();
-const courseSelection = ref();
+const selectedCourses = ref();
 
 async function getCourseData(personalData: PersonalData) {
     if (!personalData.specialization || !personalData.studyMode || !personalData.semester) {
@@ -48,16 +50,20 @@ function updatePersonalData(personal: PersonalData) {
     personalData.value = personal;
     getCourseData(personal);
 }
-async function createPdf(personalData: PersonalData) {
-    if (!personalData) {
+function updateSelectedCoursesData(courses: SelectedCourses) {
+    selectedCourses.value = courses;
+}
+async function createPdf() {
+    if (!personalData.value) {
         return;
     }
     axios.post('/pdf', {
-        surname: personalData.surname,
-        given_name: personalData.givenName,
-        semester: personalData.semester?.id,
-        study_mode: personalData.studyMode?.id,
-        specialization: personalData.specialization?.id,
+        surname: personalData.value.surname,
+        given_name: personalData.value.givenName,
+        semester: personalData.value.semester?.id,
+        study_mode: personalData.value.studyMode?.id,
+        specialization: personalData.value.specialization?.id,
+        selected_courses: selectedCourses.value,
     });
 }
 </script>
