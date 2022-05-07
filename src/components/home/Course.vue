@@ -55,6 +55,6 @@ const emits = defineEmits(['addCourse']);
 const selectedSemester: Ref<String | Number> = ref('none');
 
 function addCourse() {
-    emits('addCourse', props.course.id, selectedSemester.value);
+    emits('addCourse', props.course, selectedSemester.value);
 }
 </script>

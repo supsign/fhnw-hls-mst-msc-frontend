@@ -99,15 +99,15 @@ function sortCourses(courses: Array<ICourse>) {
  * @param courseId
  * @param semesterId
  */
-function addCourse(courseId: number, semesterId: number | string) {
-    removeExistingCourse(courseId);
+function addCourse(course: ICourse, semesterId: number | string) {
+    removeExistingCourse(course.id);
     const semesterIndex = checkIfSemesterExists(semesterId);
     if (semesterIndex > -1) {
-        return props.selectedCourses[semesterIndex].courses.push(courseId);
+        return props.selectedCourses[semesterIndex].courses.push(course);
     }
     if (semesterId !== 'none') {
         const courses = [];
-        courses.push(courseId);
+        courses.push(course);
         return props.selectedCourses.push({ semesterId, courses });
     }
 }
@@ -123,7 +123,7 @@ function removeExistingCourse(courseId: number) {
         return;
     }
     for (const i in props.selectedCourses) {
-        const index = props.selectedCourses[i].courses.findIndex((id) => id === courseId);
+        const index = props.selectedCourses[i].courses.findIndex((course) => course.id === courseId);
         if (index > -1) {
             props.selectedCourses[i].courses.splice(index, 1);
             removeSemesterWhenEmpty(Number(i));
