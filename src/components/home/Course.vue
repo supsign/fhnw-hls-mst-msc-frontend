@@ -3,7 +3,7 @@
         <div class="w-[26rem] border-b border-l border-r p-1">
             {{ course.name }}
         </div>
-        <div class="w-10 border-r border-b p-1">
+        <div class="w-10 border-r border-b p-1" v-if="!further">
             {{ type }}
         </div>
         <div class="border-b flex gap-5">
@@ -45,6 +45,7 @@ import { Semester } from '../../interfaces/semester.interface';
 const props = defineProps({
     course: { type: Object as PropType<Course>, required: true },
     type: String,
+    further: Boolean,
 });
 const emits = defineEmits(['addCourse']);
 

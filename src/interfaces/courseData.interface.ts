@@ -1,5 +1,6 @@
 import { Semester } from './semester.interface';
 import { Model } from './model.interface';
+import { Specialization } from './specialization.interface';
 
 export interface CourseDataResponse {
     courses: CourseGroup[];
@@ -18,8 +19,15 @@ export interface CourseGroup extends Model {
     required_courses_count: number;
     title: string;
     type: number;
+    specializations: Specialization[];
+    clusters: Cluster[];
 }
 
+export interface Cluster extends Model {
+    core_competences: string;
+    courses: Course[];
+    name: string;
+}
 export interface Course extends Model {
     content: string;
     ects: number;

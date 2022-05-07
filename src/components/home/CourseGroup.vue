@@ -6,7 +6,7 @@
         <div class="mb-5" v-html="group.description"></div>
         <div class="flex">
             <div class="w-[26rem] p-1 border-b"></div>
-            <div class="w-10 border-b"></div>
+            <div class="w-10 border-b" v-if="group.courses"></div>
             <div class="flex gap-5 border-b">
                 <div class="w-20 text-center">none</div>
                 <div v-for="(semester, index) in semesters" :key="index" class="w-20 text-center">
@@ -15,15 +15,61 @@
                 <div class="w-20 text-center">later</div>
             </div>
         </div>
-        <div class="max-w-min">
-            <Course
-                v-for="(course, index) in group.courses"
-                :key="index"
-                :course="course"
-                :type="group.course_group_type_short_name"
-                @addCourse="addCourse"
-            />
-        </div>
+        <template v-if="group.specializations">
+            <div v-for="(specialization, index) in group.specializations" :key="index">
+                <div class="flex">
+                    <div class="w-[26rem] p-1 border-x border-b font-bold">{{ specialization.name }}</div>
+                    <div class="flex gap-5 border-b" v-if="semesters">
+                        <div
+                            v-for="index in semesters.length + 2"
+                            :key="index"
+                            class="w-20 text-center"
+                            :class="{ 'border-r': index == semesters.length + 2 }"
+                        ></div>
+                    </div>
+                </div>
+                <Course
+                    v-for="course in specialization.courses"
+                    :key="index"
+                    :course="course"
+                    further
+                    @addCourse="addCourse"
+                />
+            </div>
+        </template>
+        <template v-if="group.clusters">
+            <div v-for="(cluster, index) in group.clusters" :key="index">
+                <div class="flex">
+                    <div class="w-[26rem] p-1 border-x border-b font-bold">{{ cluster.name }}</div>
+                    <div class="flex gap-5 border-b" v-if="semesters">
+                        <div
+                            v-for="index in semesters.length + 2"
+                            :key="index"
+                            class="w-20 text-center"
+                            :class="{ 'border-r': index == semesters.length + 2 }"
+                        ></div>
+                    </div>
+                </div>
+                <Course
+                    v-for="course in cluster.courses"
+                    :key="index"
+                    :course="course"
+                    further
+                    @addCourse="addCourse"
+                />
+            </div>
+        </template>
+        <template v-if="group.courses">
+            <div class="max-w-min">
+                <Course
+                    v-for="(course, index) in group.courses"
+                    :key="index"
+                    :course="course"
+                    :type="group.course_group_type_short_name"
+                    @addCourse="addCourse"
+                />
+            </div>
+        </template>
     </div>
 </template>
 <script setup lang="ts">
@@ -39,6 +85,12 @@ const props = defineProps({
 });
 const semesters: Array<Semester> | undefined = inject('semesters');
 
+/**
+ * Add Course
+ *
+ * @param courseId
+ * @param semesterId
+ */
 function addCourse(courseId: number, semesterId: number | string) {
     removeExistingCourse(courseId);
     const semesterIndex = checkIfSemesterExists(semesterId);
@@ -52,6 +104,12 @@ function addCourse(courseId: number, semesterId: number | string) {
     }
 }
 
+/**
+ * Check if course exist and delete it.
+ *
+ * @param courseId
+ */
+
 function removeExistingCourse(courseId: number) {
     if (!props.selectedCourses.length) {
         return;
@@ -64,7 +122,11 @@ function removeExistingCourse(courseId: number) {
         }
     }
 }
-
+/**
+ * Returns Index of Existing Semester. If no Semester found, -1 will returned.
+ *
+ * @param semesterId
+ */
 function checkIfSemesterExists(semesterId: number | string) {
     if (!props.selectedCourses.length) {
         return -1;
