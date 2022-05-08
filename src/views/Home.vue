@@ -62,6 +62,7 @@ const masterThesis: Ref<ThesesSelection> = ref({ start: undefined, theses: [] })
 const additionalComments = ref();
 const optionalCourses = ref();
 const ects = ref(0);
+
 function updateEcts(amount: number) {
     ects.value = amount;
 }
@@ -134,6 +135,7 @@ async function getCourseData(personalData: PersonalData) {
     if (!personalData.specialization || !personalData.studyMode || !personalData.semester) {
         return;
     }
+    courseData.value = undefined;
 
     const response = await axios.post(`/coursedata/${personalData.specialization.id}`, {
         study_mode: personalData.studyMode.id,

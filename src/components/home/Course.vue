@@ -37,5 +37,6 @@ const props = defineProps({
     further: Boolean,
     tooltip: String,
 });
+
 props.course.selected_semester = null;
 </script>
