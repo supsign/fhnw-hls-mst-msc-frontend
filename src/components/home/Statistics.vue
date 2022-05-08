@@ -13,7 +13,9 @@
                 <div class="p-1 w-12 text-right">ECTS</div>
             </div>
             <div v-for="(semester, index) in semesterWithCourses" :key="index" class="flex">
-                <div class="p-1 w-20 border-x border-b">{{ semester.short_name }}</div>
+                <div class="p-1 w-20 border-x border-b">
+                    {{ semester.short_name ? semester.short_name : semester.name }}
+                </div>
                 <div class="p-1 w-12 text-right border-b border-r">{{ getEcts(semester.courses) }}</div>
             </div>
             <div class="flex">
