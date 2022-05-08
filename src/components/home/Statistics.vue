@@ -2,11 +2,11 @@
     <div class="flex flex-col gap-5">
         <div class="text-lg font-bold">Summary Statistics</div>
         <div>{{ groupsWithSelectedCourses[0].courses.length }} of Specialisation Modules</div>
-        <div>{{ groupsWithSelectedCourses[0].courses.length }} of Cluster-specific Modules</div>
         <div>
-            {{ groupsWithSelectedCourses[4].courses.length + groupsWithSelectedCourses[5].courses.length }} Core
-            Competence Modules
+            {{ groupsWithSelectedCourses[4].courses.length + groupsWithSelectedCourses[5].courses.length }} of
+            Cluster-specific Modules
         </div>
+        <div>{{ groupsWithSelectedCourses[2].courses.length }} Core Competence Modules</div>
         <div class="flex flex-col w-32">
             <div class="flex border-b">
                 <div class="p-1 w-20">Semester</div>

@@ -19,6 +19,7 @@ interface pdfDataServiceInput {
     additionalComments: string;
     semestersWithCourses: any;
     ects: number;
+    groupsWithSelectedCourses: any;
 }
 
 export function pdfDataService(data: pdfDataServiceInput) {
@@ -34,7 +35,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
         master_thesis: parseMasterThesis(data.masterThesis),
         optional_english: data.optionalCourses,
         additional_comments: data.additionalComments,
-        ects: data.ects,
+        statistics: getStatistics(data.groupsWithSelectedCourses, data.ects),
     };
 }
 
@@ -60,4 +61,13 @@ function parseSelectedCoursesForPdf(semestersWithCourses: any) {
             }),
         };
     });
+}
+
+function getStatistics(groupsWithSelectedCourses: any, ects: number) {
+    return {
+        specialization: groupsWithSelectedCourses[0].courses.length,
+        cluster: groupsWithSelectedCourses[4].courses.length + groupsWithSelectedCourses[5].courses.length,
+        core: groupsWithSelectedCourses[2].courses.length,
+        ects: ects,
+    };
 }

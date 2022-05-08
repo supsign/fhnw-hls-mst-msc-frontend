@@ -182,6 +182,7 @@ async function createPdf() {
         masterThesis: masterThesis.value,
         optionalCourses: optionalCourses.value,
         additionalComments: additionalComments.value,
+        groupsWithSelectedCourses: groupsWithSelectedCourses.value,
         ects: ects.value,
     });
     const validData = validateData(pdfData);
