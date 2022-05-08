@@ -4,18 +4,21 @@
             <Personal @getCourseData="getCourseData" @updatePersonalData="updatePersonalData" />
         </Card>
         <Card v-if="courseData">
-            <CourseSelection
-                :course-data="courseData"
-                :ects="ects"
-                @updateSelectedCoursesData="updateSelectedCoursesData"
-            />
+            <CourseSelection :course-data="courseData" :ects="ects" />
         </Card>
         <Card v-if="courseData && masterThesisData">
             <ModulesOutside :texts="courseData.texts" @updateModulesOutsideData="updateModulesOutsideData" />
             <DoubleDegree :texts="courseData.texts" v-model="doubleDegree" />
             <MasterThesis :data="masterThesisData" v-model="masterThesis" />
-            <OptionalEnglish v-model="optionalCourses" :course-data="courseData" :selectedCourses="selectedCourses" />
+            <OptionalEnglish v-model="optionalCourses" :course-data="courseData" />
             <AdditionalComments v-model="additionalComments" />
+
+            <Statistics
+                :groupsWithSelectedCourses="groupsWithSelectedCourses"
+                :semesterWithCourses="semesterWithCourses"
+                @update-ects="updateEcts"
+            />
+
             <div class="flex justify-end">
                 <button
                     @click="createPdf"
@@ -36,7 +39,6 @@ import DoubleDegree from '../components/home/DoubleDegree.vue';
 import OptionalEnglish from '../components/home/OptionalEnglish.vue';
 import AdditionalComments from '../components/home/AdditionalComments.vue';
 import { PersonalData } from '../interfaces/personalData.interface';
-import { SelectedCourses } from '../interfaces/selectedCourses.interface';
 import { CourseDataResponse } from '../interfaces/courseData.interface';
 import { OutsideModule } from '../interfaces/outsideModule.interface';
 import MasterThesis from '../components/home/MasterThesis.vue';
@@ -46,10 +48,12 @@ import { computed } from '@vue/reactivity';
 import { validateData } from '../helpers/validation';
 import Card from '../components/base/Card.vue';
 import { pdfDataService } from '../services/pdfData.service';
+import Statistics from '../components/home/Statistics.vue';
+import { ISelectedCourses, ICourse } from '../interfaces/course.interface';
 
 const courseData: Ref<CourseDataResponse | undefined> = ref();
 const personalData: Ref<PersonalData | undefined> = ref();
-const selectedCourses: Ref<Array<SelectedCourses> | undefined> = ref();
+
 const outsideModules: Ref<Array<OutsideModule> | undefined> = ref();
 const modulesOutside: Ref<Array<OutsideModule> | undefined> = ref();
 const doubleDegree = ref(false);
@@ -57,19 +61,75 @@ const masterThesisData: Ref<Theses | undefined> = ref();
 const masterThesis: Ref<ThesesSelection> = ref({ start: undefined, theses: [] });
 const additionalComments = ref();
 const optionalCourses = ref();
-const ects = computed(() => {
-    let count = 0;
-    if (!selectedCourses.value) {
-        return undefined;
+const ects = ref(0);
+function updateEcts(amount: number) {
+    ects.value = amount;
+}
+
+const groupsWithSelectedCourses = computed(() => {
+    if (!courseData.value) {
+        return null;
     }
-    for (let selected of selectedCourses.value) {
-        for (let course of selected.courses) {
-            count += course.ects;
+    const courseDataGroups = JSON.parse(JSON.stringify(courseData.value));
+    //@ts-ignore
+    const groups = courseDataGroups.courses[0];
+    const groupsWithSelected = groups.map((group) => {
+        group.courses = group.courses.filter((course) => {
+            if (course.selected_semester) {
+                return course;
+            }
+        });
+        return group;
+    });
+    const furtherGroups = courseDataGroups.courses[1];
+    const furtherGroupsWithSelected = furtherGroups.map((group) => {
+        if (group.hasOwnProperty('specializations')) {
+            group.courses = group.specializations
+                .map((spec) => {
+                    return spec.courses;
+                })
+                .flat(1)
+                .filter((course) => {
+                    if (course.selected_semester) {
+                        return course;
+                    }
+                });
         }
-    }
-    return count;
+        if (group.hasOwnProperty('clusters')) {
+            group.courses = group.clusters
+                .map((clusters) => {
+                    return clusters.courses;
+                })
+                .flat(1)
+                .filter((course) => {
+                    if (course.selected_semester) {
+                        return course;
+                    }
+                });
+        }
+        return group;
+    });
+    return groupsWithSelected.concat(furtherGroupsWithSelected);
 });
 
+const semesterWithCourses = computed(() => {
+    if (!groupsWithSelectedCourses.value && !courseData.value) {
+        return null;
+    }
+    const courses = [];
+    for (let group of groupsWithSelectedCourses.value) {
+        courses.push(group.courses);
+    }
+    const selectedCourses = courses.flat(1);
+    return courseData.value.semesters.map((semester) => {
+        semester = JSON.parse(JSON.stringify(semester));
+        semester.courses = selectedCourses.filter((course) => {
+            return course.selected_semester.id === semester.id;
+        });
+
+        return semester;
+    });
+});
 async function getCourseData(personalData: PersonalData) {
     if (!personalData.specialization || !personalData.studyMode || !personalData.semester) {
         return;
@@ -101,13 +161,11 @@ function updatePersonalData(personal: PersonalData) {
     personalData.value = personal;
     getCourseData(personal);
 }
-function updateSelectedCoursesData(courses: SelectedCourses) {
-    selectedCourses.value = courses;
-}
 function updateModulesOutsideData(modulesOutside: Array<OutsideModule>) {
     modulesOutside.pop();
     outsideModules.value = modulesOutside;
 }
+
 async function createPdf() {
     if (!personalData.value) {
         return;

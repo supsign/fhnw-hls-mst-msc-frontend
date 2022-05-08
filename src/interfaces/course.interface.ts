@@ -1,6 +1,11 @@
 import { Model } from './model.interface';
 import { Semester } from './semester.interface';
 
+export interface ISelectedCourses {
+    course: ICourse;
+    semester: Semester;
+}
+
 export interface ICourse extends Model {
     content: string;
     ects: number;

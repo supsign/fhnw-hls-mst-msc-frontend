@@ -27,7 +27,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
         semester: data.semester?.id,
         study_mode: data.studyMode?.id,
         specialization: data.specialization?.id,
-        selected_courses: parseSelectedCourses(data.courseData),
+        selected_courses: parseSelectedCoursesForPdf(data.courseData),
         modules_outside: data.outsideModules,
         double_degree: data.doubleDegree,
         master_thesis: parseMasterThesis(data.masterThesis),
@@ -50,14 +50,13 @@ function parseMasterThesis(masterThesis: any) {
     };
 }
 
-function parseSelectedCourses(courseData: CourseDataResponse) {
+function getSemestersWithCourses(courseData: CourseDataResponse) {
     const moduleGroup = courseData.courses[0].map((group) => {
         const selected = group.courses.map((course) => {
             if (course.selected_semester) {
-                console.log(course.selected_semester);
                 return {
                     semesterId: course.selected_semester.id ? course.selected_semester.id : course.selected_semester,
-                    course: course.id,
+                    course: course,
                 };
             }
             return null;
@@ -88,4 +87,16 @@ function parseSelectedCourses(courseData: CourseDataResponse) {
         const collect = collection.filter((col) => col?.semesterId === semester.semesterId);
         semester.courses.push(collect.map((col) => col?.course));
     }
+    console.log(semestersWithEmptyCourses);
+    return;
+}
+
+function parseSelectedCoursesForPdf(courseData: CourseDataResponse) {
+    const semestersWithCourses = getSemestersWithCourses(courseData);
+    console.log(semestersWithCourses);
+    const test = semestersWithCourses.map((item) => {
+        return item.courses.map((course) => {
+            return JSON.parse(JSON.stringify(course));
+        });
+    });
 }
