@@ -121,7 +121,6 @@ const semesterWithCourses = computed(() => {
         courses.push(group.courses);
     }
     const selectedCourses = courses.flat(1);
-    courseData.value.semesters.push('later');
     return courseData.value.semesters.map((semester) => {
         semester = JSON.parse(JSON.stringify(semester));
         semester.courses = selectedCourses.filter((course) => {
