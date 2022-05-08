@@ -51,6 +51,7 @@ import { pdfDataService } from '../services/pdfData.service';
 import Statistics from '../components/home/Statistics.vue';
 import { ISelectedCourses, ICourse } from '../interfaces/course.interface';
 import Swal from 'sweetalert2';
+import ErrorDisplay from '../components/home/ErrorDisplay.vue';
 const courseData: Ref<CourseDataResponse | undefined> = ref();
 const personalData: Ref<PersonalData | undefined> = ref();
 
@@ -62,6 +63,7 @@ const masterThesis: Ref<ThesesSelection> = ref({ start: undefined, theses: [] })
 const additionalComments = ref();
 const optionalCourses = ref();
 const ects = ref(0);
+const errors = ref();
 
 function updateEcts(amount: number) {
     ects.value = amount;
@@ -187,11 +189,10 @@ async function createPdf() {
         groupsWithSelectedCourses: groupsWithSelectedCourses.value,
         ects: ects.value,
     });
-    console.log('error:', pdfData.value);
-
+    errors.value = pdfData.value;
     Swal.fire({
         title: 'Error!',
-        html: 'Do you want to continue',
+        html: getErrorHtml(pdfData.value.errors),
         icon: 'error',
         confirmButtonText: 'Cool',
     });
@@ -199,5 +200,11 @@ async function createPdf() {
     axios.post('/pdf', pdfData.value);
 }
 
-function createErrorHtml(errors: any) {}
+function getErrorHtml(errors: any) {
+    let string = '';
+    for (let error of errors) {
+        string += `<div class="text-red-500">${error}</div>`;
+    }
+    return string;
+}
 </script>
