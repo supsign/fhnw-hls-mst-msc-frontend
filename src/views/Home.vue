@@ -161,7 +161,6 @@ async function getThesisData() {
 
 function updatePersonalData(personal: PersonalData) {
     personalData.value = personal;
-    getCourseData(personal);
 }
 function updateModulesOutsideData(modulesOutside: Array<OutsideModule>) {
     modulesOutside.pop();

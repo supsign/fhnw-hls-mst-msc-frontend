@@ -3,19 +3,26 @@
         <div class="text-lg font-bold">Personal Data</div>
         <Input label="Surname" v-model="personalData.surname" />
         <Input label="Given Name" v-model="personalData.givenName" />
-        <Select label="Semester" :options="data.semesters" v-model="personalData.semester" />
+        <Select
+            label="Semester"
+            :options="data.semesters"
+            v-model="personalData.semester"
+            @change="emits('getCourseData', personalData)"
+        />
         <Select
             :title="data.studyMode.tooltip"
             label="Study Mode"
             :options="data.studyMode.studyModes"
             options_label="label"
             v-model="personalData.studyMode"
+            @change="emits('getCourseData', personalData)"
         />
         <Select
             label="Specialization"
             :options="data.specializations"
             placeholder="-- Choose Specialization --"
             v-model="personalData.specialization"
+            @change="emits('getCourseData', personalData)"
         />
     </div>
 </template>
