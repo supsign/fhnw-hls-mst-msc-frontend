@@ -49,7 +49,6 @@ export function pdfDataService(data: pdfDataServiceInput) {
 }
 
 function parseMasterThesis(masterThesis: any) {
-    console.log(masterThesis);
     if (!masterThesis || !masterThesis.hasOwnProperty('start') || !masterThesis.theses.length) {
         return null;
     }

@@ -1,10 +1,11 @@
 export function validateData(pdfData: any) {
+    console.log(pdfData);
     const errorBag = [];
 
     if (!pdfData.surname) {
         errorBag.push('Please type your Surname.');
     }
-    if (!pdfData.given_name) {
+    if (!pdfData.givenName) {
         errorBag.push('Please type your Given Name.');
     }
     if (pdfData.masterThesis) {
@@ -15,7 +16,7 @@ export function validateData(pdfData: any) {
 
     if (pdfData.statistics.moduleGroupCount) {
         for (let group of pdfData.statistics.moduleGroupCount) {
-            if (group.required_courses_count < 4) {
+            if (group.required_courses_count > group.count) {
                 errorBag.push(`You have not selected enough modules in ${group.name}. Please correct`);
             }
         }

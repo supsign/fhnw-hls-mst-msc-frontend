@@ -45,13 +45,10 @@ import MasterThesis from '../components/home/MasterThesis.vue';
 import { Theses, ThesesSelection } from '../interfaces/theses.interface';
 import CourseSelection from '../components/home/CourseSelection.vue';
 import { computed } from '@vue/reactivity';
-import { validateData } from '../helpers/validation';
 import Card from '../components/base/Card.vue';
 import { pdfDataService } from '../services/pdfData.service';
 import Statistics from '../components/home/Statistics.vue';
-import { ISelectedCourses, ICourse } from '../interfaces/course.interface';
 import Swal from 'sweetalert2';
-import ErrorDisplay from '../components/home/ErrorDisplay.vue';
 const courseData: Ref<CourseDataResponse | undefined> = ref();
 const personalData: Ref<PersonalData | undefined> = ref();
 
@@ -59,7 +56,7 @@ const outsideModules: Ref<Array<OutsideModule> | undefined> = ref();
 const modulesOutside: Ref<Array<OutsideModule> | undefined> = ref();
 const doubleDegree = ref(false);
 const masterThesisData: Ref<Theses | undefined> = ref();
-const masterThesis: Ref<ThesesSelection> = ref({ start: undefined, theses: [] });
+const masterThesis: Ref<ThesesSelection> = ref({ start: undefined, theses: [], furtherDetails: '' });
 const additionalComments = ref();
 const optionalCourses = ref();
 const ects = ref(0);
@@ -124,6 +121,7 @@ const semesterWithCourses = computed(() => {
         courses.push(group.courses);
     }
     const selectedCourses = courses.flat(1);
+    courseData.value.semesters.push('later');
     return courseData.value.semesters.map((semester) => {
         semester = JSON.parse(JSON.stringify(semester));
         semester.courses = selectedCourses.filter((course) => {
@@ -189,13 +187,16 @@ async function createPdf() {
         groupsWithSelectedCourses: groupsWithSelectedCourses.value,
         ects: ects.value,
     });
-    errors.value = pdfData.value;
-    Swal.fire({
-        title: 'Error!',
-        html: getErrorHtml(pdfData.value.errors),
-        icon: 'error',
-        confirmButtonText: 'Cool',
-    });
+    if (pdfData.value.hasOwnProperty('errors')) {
+        errors.value = pdfData.value;
+        Swal.fire({
+            title: 'Error!',
+            html: getErrorHtml(pdfData.value.errors),
+            icon: 'error',
+            confirmButtonText: 'Cool',
+        });
+    }
+    console.log(pdfData.value);
 
     axios.post('/pdf', pdfData.value);
 }
