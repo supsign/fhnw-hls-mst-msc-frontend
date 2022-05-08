@@ -118,7 +118,7 @@ async function createPdf() {
         semester: personalData.value.semester,
         studyMode: personalData.value.studyMode,
         specialization: personalData.value.specialization,
-        courseData: selectedCourses.value,
+        courseData: courseData.value,
         outsideModules: outsideModules.value,
         doubleDegree: doubleDegree.value,
         masterThesis: masterThesis.value,

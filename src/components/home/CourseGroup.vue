@@ -74,6 +74,12 @@
                     :semesters="semesters"
                     :tooltip="group.tooltip"
                 />
+                <div
+                    class="flex justify-end"
+                    :class="[count < group.required_courses_count ? 'text-red-600' : 'text-green-600']"
+                >
+                    Required {{ count }}/{{ group.required_courses_count }}
+                </div>
             </div>
         </template>
     </div>
@@ -85,13 +91,28 @@ import { ICourse } from '../../interfaces/course.interface';
 import { Semester } from '../../interfaces/semester.interface';
 import { SelectedCourses } from '../../interfaces/selectedCourses.interface';
 import Course from './Course.vue';
+import { computed } from '@vue/reactivity';
 
 const props = defineProps({
     group: { type: Object as PropType<CourseGroup>, required: true },
     semesters: Array as PropType<Array<Semester>>,
 });
 
+const emits = defineEmits();
 function sortCourses(courses: Array<ICourse>) {
     return courses.sort((a, b) => a.semester_type - b.semester_type);
 }
+
+const count = computed(() => {
+    if (props.group.courses) {
+        let count = 0;
+        for (let course of props.group.courses) {
+            if (course.selected_semester) {
+                count += 1;
+            }
+        }
+        return count;
+    }
+    return null;
+});
 </script>

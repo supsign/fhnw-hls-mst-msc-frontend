@@ -4,7 +4,7 @@ import { Specialization } from './specialization.interface';
 import { ICourse } from './course.interface';
 
 export interface CourseDataResponse {
-    courses: CourseGroup[];
+    courses: [CourseGroup[]];
     semesters: Semester[];
     texts: Array<{ id: number; name: string; content: string }>;
     theses: [];
