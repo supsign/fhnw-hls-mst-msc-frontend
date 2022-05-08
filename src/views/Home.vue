@@ -50,7 +50,7 @@ import Card from '../components/base/Card.vue';
 import { pdfDataService } from '../services/pdfData.service';
 import Statistics from '../components/home/Statistics.vue';
 import { ISelectedCourses, ICourse } from '../interfaces/course.interface';
-
+import Swal from 'sweetalert2';
 const courseData: Ref<CourseDataResponse | undefined> = ref();
 const personalData: Ref<PersonalData | undefined> = ref();
 
@@ -171,7 +171,8 @@ async function createPdf() {
     if (!personalData.value) {
         return;
     }
-    const pdfData = pdfDataService({
+    const pdfData = ref();
+    pdfData.value = pdfDataService({
         surname: personalData.value.surname,
         givenName: personalData.value.givenName,
         semester: personalData.value.semester,
@@ -186,8 +187,17 @@ async function createPdf() {
         groupsWithSelectedCourses: groupsWithSelectedCourses.value,
         ects: ects.value,
     });
-    const validData = validateData(pdfData);
+    console.log('error:', pdfData.value);
 
-    axios.post('/pdf', pdfData);
+    Swal.fire({
+        title: 'Error!',
+        html: 'Do you want to continue',
+        icon: 'error',
+        confirmButtonText: 'Cool',
+    });
+
+    axios.post('/pdf', pdfData.value);
 }
+
+function createErrorHtml(errors: any) {}
 </script>

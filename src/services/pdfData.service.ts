@@ -1,3 +1,4 @@
+import { validateData } from '../helpers/validation';
 import { CourseDataResponse, CourseGroup } from '../interfaces/courseData.interface';
 import { OutsideModule } from '../interfaces/outsideModule.interface';
 import { Semester } from '../interfaces/semester.interface';
@@ -23,25 +24,34 @@ interface pdfDataServiceInput {
 }
 
 export function pdfDataService(data: pdfDataServiceInput) {
-    return {
-        surname: data.surname,
-        given_name: data.givenName,
-        semester: data.semester?.id,
-        study_mode: data.studyMode?.id,
-        specialization: data.specialization?.id,
-        selected_courses: parseSelectedCoursesForPdf(data.semestersWithCourses),
-        modules_outside: data.outsideModules,
-        double_degree: data.doubleDegree,
-        master_thesis: parseMasterThesis(data.masterThesis),
-        optional_english: data.optionalCourses,
-        additional_comments: data.additionalComments,
-        statistics: getStatistics(data.groupsWithSelectedCourses, data.ects),
-    };
+    data.selectedCourses = parseSelectedCoursesForPdf(data.semestersWithCourses);
+    data.statistics = getStatistics(data.groupsWithSelectedCourses, data.ects);
+    data.masterThesis = parseMasterThesis(JSON.parse(JSON.stringify(data.masterThesis)));
+    const validator = validateData(data);
+
+    if (!validator.amount) {
+        return {
+            surname: data.surname,
+            given_name: data.givenName,
+            semester: data.semester?.id,
+            study_mode: data.studyMode?.id,
+            specialization: data.specialization?.id,
+            selected_courses: data.selectedCourses,
+            modules_outside: data.outsideModules,
+            double_degree: data.doubleDegree,
+            master_thesis: data.masterThesis,
+            optional_english: data.optionalCourses,
+            additional_comments: data.additionalComments,
+            statistics: data.statistics,
+        };
+    }
+    return validator;
 }
 
 function parseMasterThesis(masterThesis: any) {
-    if (!masterThesis) {
-        return masterThesis;
+    console.log(masterThesis);
+    if (!masterThesis || !masterThesis.hasOwnProperty('start') || !masterThesis.theses.length) {
+        return null;
     }
     return {
         start: masterThesis.start.id,
@@ -69,5 +79,18 @@ function getStatistics(groupsWithSelectedCourses: any, ects: number) {
         cluster: groupsWithSelectedCourses[4].courses.length + groupsWithSelectedCourses[5].courses.length,
         core: groupsWithSelectedCourses[2].courses.length,
         ects: ects,
+        moduleGroupCount: getModuleGroupCount(groupsWithSelectedCourses),
     };
+}
+
+function getModuleGroupCount(groupsWithSelectedCourses: any) {
+    const filterModules = groupsWithSelectedCourses.filter((group) => {
+        if (group.hasOwnProperty('id')) {
+            return group;
+        }
+    });
+    return filterModules.map((module) => {
+        module.count = module.courses.length;
+        return module;
+    });
 }
