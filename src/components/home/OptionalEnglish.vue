@@ -14,11 +14,7 @@
                 <div class="w-20 text-center">later</div>
             </div>
         </div>
-        <Course
-            :course="courseData.optional_courses.courses[0]"
-            :semesters="courseData.semesters"
-            @add-course="addCourse"
-        />
+        <Course :course="courseData.optional_courses.courses[0]" :semesters="courseData.semesters" />
     </div>
 </template>
 <script setup lang="ts">
@@ -28,29 +24,10 @@ import { CourseDataResponse } from '../../interfaces/courseData.interface';
 import Course from './Course.vue';
 const props = defineProps({
     courseData: { type: Object as PropType<CourseDataResponse>, required: true },
-    modelValue: Array,
 });
 const emits = defineEmits(['update:modelValue']);
 
-const value = computed({
-    get() {
-        return props.modelValue;
-    },
-    set(value) {
-        emits('update:modelValue', value);
-    },
-});
 const description = props.courseData.optional_courses?.texts.find(
     (text) => text.name === 'optional_english_description'
 );
-
-function addCourse(courseId: number, semesterId: number | string) {
-    const courses = [];
-    if (semesterId !== 'none') {
-        courses.push(courseId);
-        value.value = [{ semesterId, courses }];
-    } else {
-        value.value = [];
-    }
-}
 </script>

@@ -10,7 +10,7 @@
             <ModulesOutside :texts="courseData.texts" @updateModulesOutsideData="updateModulesOutsideData" />
             <DoubleDegree :texts="courseData.texts" v-model="doubleDegree" />
             <MasterThesis :data="masterThesisData" v-model="masterThesis" />
-            <OptionalEnglish v-model="optionalCourses" :course-data="courseData" />
+            <OptionalEnglish :course-data="courseData" />
             <AdditionalComments v-model="additionalComments" />
 
             <Statistics
@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import Personal from '../components/home/Personal.vue';
 import axios from 'axios';
-import { Ref, ref, watch } from 'vue';
+import { Ref, ref, watch, computed } from 'vue';
 import ModulesOutside from '../components/home/ModulesOutside.vue';
 import DoubleDegree from '../components/home/DoubleDegree.vue';
 import OptionalEnglish from '../components/home/OptionalEnglish.vue';
@@ -44,7 +44,6 @@ import { OutsideModule } from '../interfaces/outsideModule.interface';
 import MasterThesis from '../components/home/MasterThesis.vue';
 import { Theses, ThesesSelection } from '../interfaces/theses.interface';
 import CourseSelection from '../components/home/CourseSelection.vue';
-import { computed } from '@vue/reactivity';
 import Card from '../components/base/Card.vue';
 import { pdfDataService } from '../services/pdfData.service';
 import Statistics from '../components/home/Statistics.vue';
@@ -57,7 +56,11 @@ const outsideModules: Ref<Array<OutsideModule> | undefined> = ref();
 const modulesOutside: Ref<Array<OutsideModule> | undefined> = ref();
 const doubleDegree = ref(false);
 const masterThesisData: Ref<Theses | undefined> = ref();
-const masterThesis: Ref<ThesesSelection> = ref({ start: undefined, theses: [], furtherDetails: '' });
+const masterThesis: Ref<ThesesSelection> = ref({
+    start: undefined,
+    theses: [],
+    furtherDetails: '',
+});
 const additionalComments = ref();
 const optionalCourses = ref();
 const ects = ref(0);
@@ -139,6 +142,7 @@ const semesterWithCourses = computed(() => {
     };
     return coursesInSemesters.concat(coursesInLater);
 });
+
 async function getCourseData(personalData: PersonalData) {
     if (!personalData.specialization || !personalData.studyMode || !personalData.semester) {
         return;
@@ -165,7 +169,21 @@ async function getThesisData() {
         study_mode: personalData.value?.studyMode.id,
     });
     masterThesisData.value = response.data;
+    masterThesis.value.start = response.data.starts[0];
 }
+const optionalEnglish = computed(() => {
+    const course = courseData.value?.optional_courses.courses[0];
+    if (!course.selected_semester) {
+        return null;
+    }
+
+    if (course.selected_semester) {
+        return {
+            semesterId: course.selected_semester.id,
+            courses: [course.id],
+        };
+    }
+});
 
 function updatePersonalData(personal: PersonalData) {
     personalData.value = personal;
@@ -189,7 +207,7 @@ async function createPdf() {
         outsideModules: outsideModules.value,
         doubleDegree: doubleDegree.value,
         masterThesis: masterThesis.value,
-        optionalCourses: optionalCourses.value,
+        optionalCourses: optionalEnglish.value,
         additionalComments: additionalComments.value,
         groupsWithSelectedCourses: groupsWithSelectedCourses.value,
         ects: ects.value,
