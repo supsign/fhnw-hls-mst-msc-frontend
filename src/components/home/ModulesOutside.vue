@@ -27,6 +27,7 @@
     </div>
 </template>
 <script setup lang="ts">
+import { whenever } from '@vueuse/core';
 import { Ref, ref } from 'vue';
 import { OutsideModule } from '../../interfaces/outsideModule.interface';
 import Input from '../base/Input.vue';
@@ -40,4 +41,7 @@ const outsideModules: Ref<Array<OutsideModule>> = ref([{ title: '', ects: undefi
 function addNewModule() {
     outsideModules.value.push({ title: '', ects: undefined, university: '' });
 }
+whenever(outsideModules.value, (value) => {
+    emits('updateModulesOutsideData', value);
+});
 </script>

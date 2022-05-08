@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col gap-5" v-if="groupsWithSelectedCourses">
+    <div class="flex flex-col gap-5">
         <div class="text-lg font-bold">Additional Comments on the Module Choice</div>
         <textarea
             :value="modelValue"

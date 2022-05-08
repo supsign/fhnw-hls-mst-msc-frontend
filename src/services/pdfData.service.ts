@@ -40,7 +40,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
             modules_outside: data.outsideModules,
             double_degree: data.doubleDegree,
             master_thesis: data.masterThesis,
-            optional_english: data.optionalCourses,
+            optional_courses: data.optionalCourses,
             additional_comments: data.additionalComments,
             statistics: data.statistics,
         };

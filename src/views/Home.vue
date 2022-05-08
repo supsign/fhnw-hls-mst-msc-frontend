@@ -49,6 +49,7 @@ import Card from '../components/base/Card.vue';
 import { pdfDataService } from '../services/pdfData.service';
 import Statistics from '../components/home/Statistics.vue';
 import Swal from 'sweetalert2';
+import { useRouter } from 'vue-router';
 const courseData: Ref<CourseDataResponse | undefined> = ref();
 const personalData: Ref<PersonalData | undefined> = ref();
 
@@ -62,6 +63,7 @@ const optionalCourses = ref();
 const ects = ref(0);
 const errors = ref();
 
+const router = useRouter();
 function updateEcts(amount: number) {
     ects.value = amount;
 }
@@ -169,7 +171,6 @@ function updatePersonalData(personal: PersonalData) {
     personalData.value = personal;
 }
 function updateModulesOutsideData(modulesOutside: Array<OutsideModule>) {
-    modulesOutside.pop();
     outsideModules.value = modulesOutside;
 }
 
@@ -204,7 +205,9 @@ async function createPdf() {
     }
     console.log(pdfData.value);
 
-    axios.post('/pdf', pdfData.value);
+    const filename = await axios.post('/pdf', pdfData.value);
+    console.log(filename);
+    window.open('http://fhnw-hls-mst-msc.loc/' + filename.data);
 }
 
 function getErrorHtml(errors: any) {
