@@ -1,4 +1,5 @@
 export function validateData(pdfData: any) {
+    console.log(pdfData);
     const errorBag = [];
 
     if (!pdfData.surname) {
@@ -7,7 +8,7 @@ export function validateData(pdfData: any) {
     if (!pdfData.given_name) {
         errorBag.push('Please type your Given Name.');
     }
-    if (!pdfData.masterThesis.theses.length) {
+    if (!pdfData.master_thesis.theses.length) {
         errorBag.push('Please select a broad topic for your MSc Thesis.');
     }
     if (pdfData.ects < 50) {

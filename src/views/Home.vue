@@ -176,7 +176,7 @@ async function createPdf() {
         semester: personalData.value.semester,
         studyMode: personalData.value.studyMode,
         specialization: personalData.value.specialization,
-        courseData: courseData.value,
+        semestersWithCourses: semesterWithCourses.value,
         outsideModules: outsideModules.value,
         doubleDegree: doubleDegree.value,
         masterThesis: masterThesis.value,
@@ -186,6 +186,6 @@ async function createPdf() {
     });
     const validData = validateData(pdfData);
 
-    axios.post('/pdf', validData);
+    axios.post('/pdf', pdfData);
 }
 </script>

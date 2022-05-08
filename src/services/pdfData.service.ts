@@ -17,6 +17,7 @@ interface pdfDataServiceInput {
     masterThesis: ThesesSelection;
     optionalCourses: any;
     additionalComments: string;
+    semestersWithCourses: any;
     ects: number;
 }
 
@@ -27,7 +28,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
         semester: data.semester?.id,
         study_mode: data.studyMode?.id,
         specialization: data.specialization?.id,
-        selected_courses: parseSelectedCoursesForPdf(data.courseData),
+        selected_courses: parseSelectedCoursesForPdf(data.semestersWithCourses),
         modules_outside: data.outsideModules,
         double_degree: data.doubleDegree,
         master_thesis: parseMasterThesis(data.masterThesis),
@@ -50,53 +51,13 @@ function parseMasterThesis(masterThesis: any) {
     };
 }
 
-function getSemestersWithCourses(courseData: CourseDataResponse) {
-    const moduleGroup = courseData.courses[0].map((group) => {
-        const selected = group.courses.map((course) => {
-            if (course.selected_semester) {
-                return {
-                    semesterId: course.selected_semester.id ? course.selected_semester.id : course.selected_semester,
-                    course: course,
-                };
-            }
-            return null;
-        });
-        const filterUsedSelected = selected.filter((select) => {
-            if (select) {
-                return select;
-            }
-        });
-
-        return filterUsedSelected;
-    });
-
-    const collection = [];
-    for (let arr of moduleGroup) {
-        for (let item of arr) {
-            collection.push(item);
-        }
-    }
-
-    const semestersWithEmptyCourses = [];
-    for (let coll of collection) {
-        if (semestersWithEmptyCourses.findIndex((item) => item.semesterId === coll?.semesterId) === -1) {
-            semestersWithEmptyCourses.push({ semesterId: coll?.semesterId, courses: [] });
-        }
-    }
-    for (let semester of semestersWithEmptyCourses) {
-        const collect = collection.filter((col) => col?.semesterId === semester.semesterId);
-        semester.courses.push(collect.map((col) => col?.course));
-    }
-    console.log(semestersWithEmptyCourses);
-    return;
-}
-
-function parseSelectedCoursesForPdf(courseData: CourseDataResponse) {
-    const semestersWithCourses = getSemestersWithCourses(courseData);
-    console.log(semestersWithCourses);
-    const test = semestersWithCourses.map((item) => {
-        return item.courses.map((course) => {
-            return JSON.parse(JSON.stringify(course));
-        });
+function parseSelectedCoursesForPdf(semestersWithCourses: any) {
+    return semestersWithCourses.map((semester) => {
+        return {
+            semesterId: semester.id,
+            courses: semester.courses.map((course) => {
+                return course.id;
+            }),
+        };
     });
 }
