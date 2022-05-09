@@ -1,19 +1,19 @@
-import { Cluster } from './courseData.interface';
 import { IModel } from './model.interface';
 import { ISemester } from './semester.interface';
-import { Specialization } from './specialization.interface';
+import { ISpecialization } from './specialization.interface';
 import { IText } from './text.interface';
-import { Theses } from './theses.interface';
+import { IThesis } from './theses.interface';
 
 export interface ICourseDataResponse {
     courses: ICourseGroup[][];
     semesters: ISemester[];
     texts: IText[];
-    theses: Theses;
+    theses: IThesis;
     optional_courses: { courses: ICourse[]; texts: IText[] };
 }
 
 export interface ICourseGroup extends IModel {
+    count: number;
     course_group_type_short_name: string;
     course_group_type_tooltip: string;
     courses: ICourse[];
@@ -23,8 +23,8 @@ export interface ICourseGroup extends IModel {
     required_courses_count: number;
     title: string;
     type: number;
-    specializations: Specialization[];
-    clusters: Cluster[];
+    specializations: ISpecialization[];
+    clusters: ICluster[];
     tooltip: string;
 }
 
@@ -42,4 +42,9 @@ export interface ICourse extends IModel {
 export interface ISelectedCourses {
     course: ICourse;
     semester: ISemester;
+}
+export interface ICluster extends IModel {
+    core_competences: string;
+    courses: ICourse[];
+    name: string;
 }

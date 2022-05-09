@@ -5,11 +5,11 @@ export function validateData(pdfData: any) {
     if (!pdfData.surname) {
         errorBag.push('Please type your Surname.');
     }
-    if (!pdfData.givenName) {
+    if (!pdfData.given_name) {
         errorBag.push('Please type your Given Name.');
     }
-    if (pdfData.masterThesis) {
-        if (!pdfData.masterThesis.theses.length) {
+    if (pdfData.master_thesis) {
+        if (!pdfData.master_thesis.theses.length) {
             errorBag.push('Please select a broad topic for your MSc Thesis.');
         }
     } else {

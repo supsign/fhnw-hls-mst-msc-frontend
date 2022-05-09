@@ -1,6 +1,6 @@
-import { Model } from './model.interface';
+import { IModel } from './model.interface';
 
-export interface StudyMode extends Model {
+export interface IStudyMode extends IModel {
     studyModes: Array<{ id: number; label: string }>;
     tooltip?: String;
 }

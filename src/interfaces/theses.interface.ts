@@ -1,11 +1,5 @@
 import { IModel } from './model.interface';
-import { Semester } from './semester.interface';
-
-export interface Theses {
-    starts: Semester[];
-    theses: Array<{ id: number; name: string }>;
-    furtherDetails: string;
-}
+import { ISemester } from './semester.interface';
 
 export interface IThesis extends IModel {
     name: string;
@@ -17,12 +11,13 @@ export interface IThesisDataResponse {
 }
 export interface IThesisTimeFrame {
     end: string;
-    start: Semester;
+    start: ISemester;
 }
 
 export interface ThesisRequestData {
     specialization: number;
 }
+
 export interface IThesisSelection {
     start: IThesisTimeFrame | null;
     theses: IThesis[] | [];

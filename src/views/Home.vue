@@ -13,6 +13,7 @@
             <OptionalEnglish :course-data="courseData" />
             <AdditionalComments v-model="additionalComments" />
             <Statistics
+                v-if="groupsWithSelectedCourses && semesterWithCourses"
                 :groupsWithSelectedCourses="groupsWithSelectedCourses"
                 :semesterWithCourses="semesterWithCourses"
                 :master-thesis="masterThesis"
@@ -48,7 +49,7 @@ import Statistics from '../components/home/Statistics.vue';
 import Swal from 'sweetalert2';
 import { IPersonalData } from '../interfaces/personal.interface';
 import { IModuleOutside } from '../interfaces/moduleOutside.interface';
-import { ISemester, ILaterSemester } from '../interfaces/semester.interface';
+import { ISemester } from '../interfaces/semester.interface';
 
 const env = import.meta.env;
 
@@ -110,18 +111,26 @@ async function getThesisData() {
 }
 
 //Optional English
-const optionalEnglish = computed(() => {
-    const course = courseData.value?.optional_courses.courses[0];
+//@ts-ignore
+const optionalEnglish: ComputedRef<ISemester[] | ILaterSemester[] | null> = computed(() => {
+    if (!courseData.value) {
+        return null;
+    }
+    const course = courseData.value.optional_courses.courses[0];
     if (!course.selected_semester) {
         return null;
     }
 
     if (course.selected_semester) {
-        return {
-            semesterId: course.selected_semester.id,
-            courses: [course.id],
-        };
+        return [
+            {
+                //@ts-ignore
+                semesterId: course.selected_semester,
+                courses: [course],
+            },
+        ];
     }
+    return null;
 });
 
 //AdditionalComments
@@ -178,8 +187,8 @@ const groupsWithSelectedCourses: ComputedRef<ICourseGroup[] | null> = computed((
     });
     return groupsWithSelected.concat(furtherGroupsWithSelected);
 });
-
-const semesterWithCourses: ComputedRef<ISemester[] | ILaterSemester[] | null> = computed(() => {
+//@ts-ignore
+const semesterWithCourses: ComputedRef<ISemester[] | null> = computed(() => {
     if (!groupsWithSelectedCourses.value || !courseData.value) {
         return null;
     }
@@ -216,14 +225,17 @@ async function createPdf() {
         return;
     }
     const pdfData = ref();
+    if (
+        !modulesOutside.value ||
+        !semesterWithCourses.value ||
+        !optionalEnglish.value ||
+        !groupsWithSelectedCourses.value
+    )
+        return;
     pdfData.value = pdfDataService({
-        surname: personalData.value.surname,
-        givenName: personalData.value.givenName,
-        semester: personalData.value.semester,
-        studyMode: personalData.value.studyMode,
-        specialization: personalData.value.specialization,
+        personalData: personalData.value,
         semestersWithCourses: semesterWithCourses.value,
-        outsideModules: modulesOutside.value,
+        modulesOutside: modulesOutside.value,
         doubleDegree: doubleDegree.value,
         masterThesis: masterThesis.value,
         optionalCourses: optionalEnglish.value,

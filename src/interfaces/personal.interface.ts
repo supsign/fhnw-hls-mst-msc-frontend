@@ -1,20 +1,20 @@
 import { IModel } from './model.interface';
-import { Semester } from './semester.interface';
-import { Specialization } from './specialization.interface';
-import { StudyMode } from './studyMode.interface';
+import { ISemester } from './semester.interface';
+import { ISpecialization } from './specialization.interface';
+import { IStudyMode } from './studyMode.interface';
 
 export interface IPersonalDataResponse {
-    semesters: Semester[];
-    specializations: Specialization[];
-    studyMode: StudyMode;
+    semesters: ISemester[];
+    specializations: ISpecialization[];
+    studyMode: IStudyMode;
     texts: IText[];
 }
 
 export interface IPersonalData {
     surname: string;
     givenName: string;
-    semester: Semester | null;
-    specialization: Specialization | null;
+    semester: ISemester | null;
+    specialization: ISpecialization | null;
     studyMode: { id: number; label: string } | null;
 }
 

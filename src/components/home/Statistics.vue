@@ -29,13 +29,14 @@
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
 import { PropType } from 'vue';
-import { ICourse } from '../../interfaces/course.interface';
-import { Theses } from '../../interfaces/theses.interface';
+import { ICourse, ICourseGroup } from '../../interfaces/course.interface';
+import { IThesisSelection } from '../../interfaces/theses.interface';
 import dayjs from 'dayjs';
+import { ILaterSemester, ISemester } from '../../interfaces/semester.interface';
 const props = defineProps({
-    groupsWithSelectedCourses: Array,
-    semesterWithCourses: Array,
-    masterThesis: Object as PropType<Theses>,
+    groupsWithSelectedCourses: { type: Array as PropType<Array<ICourseGroup>>, required: true },
+    semesterWithCourses: { type: Array as PropType<Array<ISemester | ILaterSemester>>, required: true },
+    masterThesis: Object as PropType<IThesisSelection>,
 });
 const emits = defineEmits(['update:modelValue', 'updateEcts']);
 
@@ -45,7 +46,10 @@ const specializationModulesCount = computed(() => {
             return group;
         }
     });
-    return group.courses.length;
+    if (group) {
+        return group.courses.length;
+    }
+    return 0;
 });
 
 const coreCompetenceModulesCount = computed(() => {
@@ -54,7 +58,10 @@ const coreCompetenceModulesCount = computed(() => {
             return group;
         }
     });
-    return group.courses.length;
+    if (group) {
+        return group.courses.length;
+    }
+    return 0;
 });
 
 const clusterSpecificModulesCount = computed(() => {
