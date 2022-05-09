@@ -48,12 +48,10 @@ const value = computed({
 });
 
 function getLabel(option: any) {
-    console.log(option);
     if (!props.option_labels) {
         return option['name'];
     }
     const strings = props.option_labels.split('.').map((s) => [s]);
-    console.log(strings);
     if (strings.length === 1) {
         //@ts-ignore
         return option[strings[0]];

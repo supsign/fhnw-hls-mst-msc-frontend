@@ -79,7 +79,7 @@ async function getCourseData() {
 }
 
 //Modules Outside
-const modulesOutside: Ref<Array<IModuleOutside> | null> = ref(null);
+const modulesOutside: Ref<Array<IModuleOutside>> = ref([]);
 
 function updateModulesOutsideData(data: Array<IModuleOutside>) {
     modulesOutside.value = data;
@@ -112,25 +112,22 @@ async function getThesisData() {
 
 //Optional English
 //@ts-ignore
-const optionalEnglish: ComputedRef<ISemester[] | ILaterSemester[] | null> = computed(() => {
+const optionalEnglish: ComputedRef<ISemester[]> = computed(() => {
     if (!courseData.value) {
-        return null;
-    }
-    const course = courseData.value.optional_courses.courses[0];
-    if (!course.selected_semester) {
-        return null;
-    }
-
-    if (course.selected_semester) {
         return [
             {
-                //@ts-ignore
-                semesterId: course.selected_semester,
-                courses: [course],
+                semesterId: null,
+                courses: [],
             },
         ];
     }
-    return null;
+    const course = courseData.value.optional_courses.courses[0];
+    return [
+        {
+            semesterId: course.selected_semester ? course.selected_semester : null,
+            courses: [course],
+        },
+    ];
 });
 
 //AdditionalComments
@@ -143,9 +140,9 @@ function updateEcts(amount: number) {
     ects.value = amount;
 }
 
-const groupsWithSelectedCourses: ComputedRef<ICourseGroup[] | null> = computed(() => {
+const groupsWithSelectedCourses: ComputedRef<ICourseGroup[]> = computed(() => {
     if (!courseData.value) {
-        return null;
+        return [];
     }
     const courseDataGroups: ICourseDataResponse = JSON.parse(JSON.stringify(courseData.value));
     const groups = courseDataGroups.courses[0];
@@ -188,7 +185,7 @@ const groupsWithSelectedCourses: ComputedRef<ICourseGroup[] | null> = computed((
     return groupsWithSelected.concat(furtherGroupsWithSelected);
 });
 //@ts-ignore
-const semesterWithCourses: ComputedRef<ISemester[] | null> = computed(() => {
+const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
     if (!groupsWithSelectedCourses.value || !courseData.value) {
         return null;
     }
@@ -225,13 +222,7 @@ async function createPdf() {
         return;
     }
     const pdfData = ref();
-    if (
-        !modulesOutside.value ||
-        !semesterWithCourses.value ||
-        !optionalEnglish.value ||
-        !groupsWithSelectedCourses.value
-    )
-        return;
+
     pdfData.value = pdfDataService({
         personalData: personalData.value,
         semestersWithCourses: semesterWithCourses.value,

@@ -28,7 +28,7 @@ interface parsedPdfDataInput {
     modules_outside: IModuleOutside[];
     double_degree: boolean;
     master_thesis: IThesisForPdf | null;
-    optional_courses: ISemester[];
+    optional_courses: ISelectedCoursesForPdf[];
     additional_comments: string;
     statistics: IStatistics;
 }
@@ -51,6 +51,7 @@ interface IStatistics {
 }
 
 export function pdfDataService(data: pdfDataServiceInput) {
+    console.log('HI', data);
     const parsedData: parsedPdfDataInput = {
         surname: data.personalData.surname,
         given_name: data.personalData.givenName,
@@ -64,7 +65,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
         modules_outside: data.modulesOutside,
         double_degree: data.doubleDegree,
         master_thesis: parseMasterThesis(JSON.parse(JSON.stringify(data.masterThesis))),
-        optional_courses: data.optionalCourses,
+        optional_courses: parseOptionalCoursesForPdf(data.optionalCourses),
         additional_comments: data.additionalComments,
         statistics: getStatistics(data.groupsWithSelectedCourses, data.ects),
     };
@@ -82,7 +83,7 @@ function parseMasterThesis(masterThesis: IThesisSelection): IThesisForPdf | null
     }
     return {
         //@ts-ignore
-        time_frame: masterThesis.start,
+        time_frames: masterThesis.start,
         theses: masterThesis.theses.map((theses) => {
             return theses.id;
         }),
@@ -91,6 +92,16 @@ function parseMasterThesis(masterThesis: IThesisSelection): IThesisForPdf | null
 }
 
 function parseSelectedCoursesForPdf(semestersWithCourses: ISemester[]): ISelectedCoursesForPdf[] {
+    return semestersWithCourses.map((semester) => {
+        return {
+            semesterId: semester.id,
+            courses: semester.courses.map((course) => {
+                return course.id;
+            }),
+        };
+    });
+}
+function parseOptionalCoursesForPdf(semestersWithCourses: ISemester[]): ISelectedCoursesForPdf[] {
     return semestersWithCourses.map((semester) => {
         return {
             semesterId: semester.id,
