@@ -93,7 +93,7 @@ import Course from './Course.vue';
 
 const props = defineProps({
     group: { type: Object as PropType<ICourseGroup>, required: true },
-    semesters: Array as PropType<Array<ISemester>>,
+    semesters: { type: Array as PropType<Array<ISemester>>, required: true },
 });
 
 function sortCourses(courses: Array<ICourse>) {

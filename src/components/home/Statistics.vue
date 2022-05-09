@@ -32,10 +32,10 @@ import { PropType } from 'vue';
 import { ICourse, ICourseGroup } from '../../interfaces/course.interface';
 import { IThesisSelection } from '../../interfaces/theses.interface';
 import dayjs from 'dayjs';
-import { ILaterSemester, ISemester } from '../../interfaces/semester.interface';
+import { ISemester } from '../../interfaces/semester.interface';
 const props = defineProps({
     groupsWithSelectedCourses: { type: Array as PropType<Array<ICourseGroup>>, required: true },
-    semesterWithCourses: { type: Array as PropType<Array<ISemester | ILaterSemester>>, required: true },
+    semesterWithCourses: { type: Array as PropType<Array<ISemester>>, required: true },
     masterThesis: Object as PropType<IThesisSelection>,
 });
 const emits = defineEmits(['update:modelValue', 'updateEcts']);

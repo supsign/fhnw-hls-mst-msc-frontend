@@ -5,7 +5,7 @@
         <div class="flex flex-col gap-5">
             <div v-for="(module, index) in modulesOutsideArray" :key="index" class="flex gap-10">
                 <Input label="Module Title" v-model="module.title" />
-                <Input label="ECTS" type="number" v-model="module.ects" />
+                <NumberInput label="ECTS" type="number" :min="0" v-model="module.ects" />
                 <Input label="University" v-model="module.university" />
                 <div
                     v-if="index"
@@ -30,18 +30,18 @@
 import { whenever } from '@vueuse/core';
 import { PropType, Ref, ref } from 'vue';
 import { IModuleOutside } from '../../interfaces/moduleOutside.interface';
-import { OutsideModule } from '../../interfaces/outsideModule.interface';
 import { IText } from '../../interfaces/text.interface';
 import Input from '../base/Input.vue';
+import NumberInput from '../base/NumberInput.vue';
 const props = defineProps({
     texts: { type: Array as PropType<Array<IText>>, required: true },
 });
 const emits = defineEmits(['updateModulesOutsideData']);
 const description: IText | null = props.texts.find((text) => text.name === 'modules_outside_description') || null;
-const modulesOutsideArray: Ref<Array<IModuleOutside>> = ref([{ title: '', ects: null, university: '' }]);
+const modulesOutsideArray: Ref<Array<IModuleOutside>> = ref([{ title: '', ects: 0, university: '' }]);
 
 function addNewModule() {
-    modulesOutsideArray.value.push({ title: '', ects: null, university: '' });
+    modulesOutsideArray.value.push({ title: '', ects: 0, university: '' });
 }
 // @ts-ignore
 whenever(modulesOutsideArray.value, (value) => {
