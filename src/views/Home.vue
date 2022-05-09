@@ -16,6 +16,7 @@
                 v-if="groupsWithSelectedCourses && semesterWithCourses"
                 :groupsWithSelectedCourses="groupsWithSelectedCourses"
                 :semesterWithCourses="semesterWithCourses"
+                :modules-outside="modulesOutside"
                 :master-thesis="masterThesis"
                 @update-ects="updateEcts"
             />

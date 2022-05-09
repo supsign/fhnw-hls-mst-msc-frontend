@@ -33,10 +33,12 @@ import { ICourse, ICourseGroup } from '../../interfaces/course.interface';
 import { IThesisSelection } from '../../interfaces/theses.interface';
 import dayjs from 'dayjs';
 import { ISemester } from '../../interfaces/semester.interface';
+import { IModuleOutside } from '../../interfaces/moduleOutside.interface';
 const props = defineProps({
     groupsWithSelectedCourses: { type: Array as PropType<Array<ICourseGroup>>, required: true },
     semesterWithCourses: { type: Array as PropType<Array<ISemester>>, required: true },
     masterThesis: Object as PropType<IThesisSelection>,
+    modulesOutside: Array as PropType<Array<IModuleOutside>>,
 });
 const emits = defineEmits(['update:modelValue', 'updateEcts']);
 
@@ -83,10 +85,20 @@ function getEcts(courses: ICourse[]) {
     }
     return ects;
 }
+function getEctsFromModulesOutside(modulesOutside: IModuleOutside[]) {
+    let count = 0;
+    for (let module of modulesOutside) {
+        count += module.ects;
+    }
+    return count;
+}
 const ects = computed(() => {
     let count = 0;
     for (let semester of props.semesterWithCourses) {
         count += getEcts(semester.courses);
+    }
+    if (props.modulesOutside) {
+        count += getEctsFromModulesOutside(props.modulesOutside);
     }
     emits('updateEcts', count);
     return count;

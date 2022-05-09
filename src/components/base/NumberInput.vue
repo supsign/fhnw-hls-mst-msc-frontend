@@ -6,7 +6,7 @@
             class="block py-2 px-4 w-full box-border border rounded-lg border-gray-200 shadow-md text-gray-900"
             :value="modelValue"
             type="number"
-            @input="$emit('update:modelValue', ($event.target as HTMLTextAreaElement).value)"
+            @input="$emit('update:modelValue', Number(($event.target as HTMLTextAreaElement).value))"
             v-bind="$attrs"
         />
     </div>
