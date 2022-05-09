@@ -1,48 +1,50 @@
 <template>
     <div v-if="data" class="flex flex-col justify-center gap-5">
+        <Introduction :texts="data.texts" />
         <div class="text-lg font-bold">Personal Data</div>
-        <Input label="Surname" v-model="personalData.surname" />
-        <Input label="Given Name" v-model="personalData.givenName" />
+        <Input label="Surname" v-model="value.surname" />
+        <Input label="Given Name" v-model="value.givenName" />
+        <Select label="Semester" :options="data.semesters" v-model="value.semester" @change="emits('getCourseData')" />
         <Select
-            label="Semester"
-            :options="data.semesters"
-            v-model="personalData.semester"
-            @change="emits('getCourseData', personalData)"
-        />
-        <Select
-            :title="data.studyMode.tooltip"
             label="Study Mode"
             :options="data.studyMode.studyModes"
             options_label="label"
-            v-model="personalData.studyMode"
-            @change="emits('getCourseData', personalData)"
+            v-model="value.studyMode"
+            :tooltip="data.studyMode.tooltip"
+            @change="emits('getCourseData')"
         />
         <Select
             label="Specialization"
             :options="data.specializations"
             placeholder="-- Choose Specialization --"
-            v-model="personalData.specialization"
-            @change="emits('getCourseData', personalData)"
+            v-model="value.specialization"
+            @change="emits('getCourseData')"
         />
     </div>
 </template>
 <script setup lang="ts">
-import { onBeforeMount, Ref, ref } from 'vue';
+import { onBeforeMount, PropType, Ref, ref, WritableComputedRef } from 'vue';
 import axios from 'axios';
-import { PersonalDataResponse, PersonalData } from '../../interfaces/personalData.interface';
+import { IPersonalDataResponse, IPersonalData } from '../../interfaces/personal.interface';
 import { whenever } from '@vueuse/core';
 import Input from '../base/Input.vue';
 import Select from '../base/Select.vue';
-
-const emits = defineEmits(['getCourseData', 'updatePersonalData']);
+import Introduction from './Introduction.vue';
+import { computed } from '@vue/reactivity';
+const props = defineProps({
+    modelValue: { type: Object as PropType<IPersonalData>, required: true },
+});
+const emits = defineEmits(['getCourseData', 'update:modelValue']);
 
 const data = ref();
-const personalData: Ref<PersonalData> = ref({
-    surname: '',
-    givenName: '',
-    semester: undefined,
-    studyMode: undefined,
-    specialization: undefined,
+
+const value: WritableComputedRef<IPersonalData> = computed({
+    get() {
+        return props.modelValue;
+    },
+    set(value) {
+        emits('update:modelValue', value);
+    },
 });
 
 onBeforeMount(async () => {
@@ -50,16 +52,13 @@ onBeforeMount(async () => {
     prefillValues(data.value);
 });
 
-whenever(personalData.value, () => {
-    emits('updatePersonalData', personalData.value);
-});
-
-async function getPersonalData(): Promise<PersonalDataResponse> {
-    const response = await axios.get('/personaldata');
+async function getPersonalData() {
+    const response = await axios.get<IPersonalDataResponse>('/personaldata');
     return response.data;
 }
-function prefillValues(data: PersonalDataResponse) {
-    personalData.value.semester = data.semesters.length > 0 ? data.semesters[0] : undefined;
-    personalData.value.studyMode = data.studyMode.studyModes[0];
+
+function prefillValues(data: IPersonalDataResponse) {
+    value.value.semester = data.semesters.length > 0 ? data.semesters[0] : null;
+    value.value.studyMode = data.studyMode.studyModes[0];
 }
 </script>

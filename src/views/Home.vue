@@ -1,7 +1,7 @@
 <template>
     <div class="container p-3 mx-auto">
         <Card>
-            <Personal @getCourseData="getCourseData" @updatePersonalData="updatePersonalData" />
+            <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
         <Card v-if="courseData">
             <CourseSelection :course-data="courseData" :ects="ects" />
@@ -38,8 +38,7 @@ import ModulesOutside from '../components/home/ModulesOutside.vue';
 import DoubleDegree from '../components/home/DoubleDegree.vue';
 import OptionalEnglish from '../components/home/OptionalEnglish.vue';
 import AdditionalComments from '../components/home/AdditionalComments.vue';
-import { PersonalData } from '../interfaces/personalData.interface';
-import { CourseDataResponse } from '../interfaces/courseData.interface';
+import { ICourseDataResponse } from '../interfaces/course.interface';
 import { OutsideModule } from '../interfaces/outsideModule.interface';
 import MasterThesis from '../components/home/MasterThesis.vue';
 import { Theses, ThesesSelection } from '../interfaces/theses.interface';
@@ -49,8 +48,33 @@ import { pdfDataService } from '../services/pdfData.service';
 import Statistics from '../components/home/Statistics.vue';
 import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router';
-const courseData: Ref<CourseDataResponse | undefined> = ref();
-const personalData: Ref<PersonalData | undefined> = ref();
+import { IPersonalData } from '../interfaces/personal.interface';
+const env = import.meta.env;
+
+//Personal Data
+const personalData: Ref<IPersonalData> = ref({
+    surname: '',
+    givenName: '',
+    semester: null,
+    studyMode: null,
+    specialization: null,
+});
+
+//Course Data
+const courseData: Ref<ICourseDataResponse | null> = ref(null);
+
+async function getCourseData() {
+    if (!personalData.value.specialization || !personalData.value.studyMode || !personalData.value.semester) {
+        return;
+    }
+    courseData.value = null;
+    const response = await axios.post<ICourseDataResponse>(`/coursedata/${personalData.value.specialization.id}`, {
+        study_mode: personalData.value.studyMode.id,
+        semester: personalData.value.semester.id,
+    });
+    courseData.value = response.data;
+    getThesisData();
+}
 
 const outsideModules: Ref<Array<OutsideModule> | undefined> = ref();
 const modulesOutside: Ref<Array<OutsideModule> | undefined> = ref();
@@ -143,20 +167,6 @@ const semesterWithCourses = computed(() => {
     return coursesInSemesters.concat(coursesInLater);
 });
 
-async function getCourseData(personalData: PersonalData) {
-    if (!personalData.specialization || !personalData.studyMode || !personalData.semester) {
-        return;
-    }
-    courseData.value = undefined;
-
-    const response = await axios.post(`/coursedata/${personalData.specialization.id}`, {
-        study_mode: personalData.studyMode.id,
-        semester: personalData.semester.id,
-    });
-    courseData.value = response.data;
-    getThesisData();
-}
-
 watch(doubleDegree, () => getThesisData());
 
 async function getThesisData() {
@@ -218,14 +228,13 @@ async function createPdf() {
             title: 'Error!',
             html: getErrorHtml(pdfData.value.errors),
             icon: 'error',
-            confirmButtonText: 'Cool',
+            confirmButtonText: 'OK',
         });
     }
     console.log(pdfData.value);
 
     const filename = await axios.post('/pdf', pdfData.value);
-    console.log(filename);
-    window.open('http://fhnw-hls-mst-msc.loc/' + filename.data);
+    window.open(env.VITE_BACKEND_URL + '/' + filename.data);
 }
 
 function getErrorHtml(errors: any) {

@@ -8,8 +8,7 @@ import 'sweetalert2/src/sweetalert2.scss';
 
 const env = import.meta.env;
 
-console.log(env);
-axios.defaults.baseURL = 'http://fhnw-hls-mst-msc.loc/api';
+axios.defaults.baseURL = env.VITE_API_URL;
 
 const app = createApp(App);
 app.use(router);

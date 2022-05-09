@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label v-if="label" for="input" class="px-1 bg-white text-gray-400">{{ label }}</label>
+        <label v-if="label" for="input" class="px-1 bg-white text-gray-400" :title="tooltip">{{ label }}</label>
         <select
             id="select"
             class="block py-2 px-4 w-full box-border border rounded-lg border-gray-200 shadow-md text-gray-900"
@@ -9,7 +9,7 @@
             v-bind="$attrs"
         >
             <template v-if="options.length > 0">
-                <option v-if="placeholder" value="undefined" disabled selected>{{ placeholder }}</option>
+                <option v-if="placeholder" value="null" disabled selected>{{ placeholder }}</option>
                 <option v-for="(option, index) in options" :key="index" :value="option" class="border-t border-gray-50">
                     {{ options_label ? option[options_label] : option['name'] }}
                 </option>
@@ -22,14 +22,14 @@
 </template>
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
-import { ref } from 'vue';
-
+import { PropType } from 'vue';
 const props = defineProps({
     label: String,
     options: { type: Array, required: true },
     options_label: String,
     placeholder: String,
-    modelValue: Object,
+    modelValue: Object as PropType<any>,
+    tooltip: String,
 });
 
 const emits = defineEmits(['change', 'update:modelValue']);

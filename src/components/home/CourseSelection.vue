@@ -16,15 +16,13 @@
     </div>
 </template>
 <script setup lang="ts">
-import { whenever } from '@vueuse/core';
-import { PropType, provide, ref } from 'vue';
-import { CourseDataResponse } from '../../interfaces/courseData.interface';
+import { PropType } from 'vue';
+import { ICourseDataResponse } from '../../interfaces/course.interface';
 import CourseGroup from './CourseGroup.vue';
 import EctsCount from './EctsCount.vue';
-const props = defineProps({
-    courseData: { type: Object as PropType<CourseDataResponse>, required: true },
+
+defineProps({
+    courseData: { type: Object as PropType<ICourseDataResponse>, required: true },
     ects: Number,
 });
-
-const emits = defineEmits(['updateSelectedCoursesData']);
 </script>

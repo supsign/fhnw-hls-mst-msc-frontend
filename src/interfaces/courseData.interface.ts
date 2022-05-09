@@ -1,5 +1,5 @@
 import { Semester } from './semester.interface';
-import { Model } from './model.interface';
+import { IModel } from './model.interface';
 import { Specialization } from './specialization.interface';
 import { ICourse } from './course.interface';
 
@@ -26,7 +26,7 @@ export interface CourseGroup extends Model {
     tooltip: string;
 }
 
-export interface Cluster extends Model {
+export interface Cluster extends IModel {
     core_competences: string;
     courses: ICourse[];
     name: string;

@@ -1,9 +1,9 @@
-import { Course } from './courseData.interface';
-import { Model } from './model.interface';
+import { ICourse } from './course.interface';
+import { IModel } from './model.interface';
 
-export interface Specialization extends Model {
+export interface Specialization extends IModel {
     name: String;
     short_name: String;
     cluster_id: number;
-    courses: Course[];
+    courses: ICourse[];
 }

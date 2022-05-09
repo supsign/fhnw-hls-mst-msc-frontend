@@ -30,6 +30,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
     const validator = validateData(data);
 
     if (!validator.amount) {
+        delete data.statistics.moduleGroupCount;
         return {
             surname: data.surname,
             given_name: data.givenName,
@@ -40,7 +41,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
             modules_outside: data.outsideModules,
             double_degree: data.doubleDegree,
             master_thesis: data.masterThesis,
-            optional_courses: data.optionalCourses,
+            optional_courses: [data.optionalCourses],
             additional_comments: data.additionalComments,
             statistics: data.statistics,
         };

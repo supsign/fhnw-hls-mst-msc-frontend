@@ -12,6 +12,8 @@ export function validateData(pdfData: any) {
         if (!pdfData.masterThesis.theses.length) {
             errorBag.push('Please select a broad topic for your MSc Thesis.');
         }
+    } else {
+        errorBag.push('Please select a broad topic for your MSc Thesis.');
     }
 
     if (pdfData.statistics.moduleGroupCount) {

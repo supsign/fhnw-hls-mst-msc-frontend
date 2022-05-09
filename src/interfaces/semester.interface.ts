@@ -1,6 +1,6 @@
-import { Model } from './model.interface';
+import { IModel } from './model.interface';
 
-export interface Semester extends Model {
+export interface Semester extends IModel {
     is_autumn_semester: boolean;
     is_spring_semester: boolean;
     long_name: string;
