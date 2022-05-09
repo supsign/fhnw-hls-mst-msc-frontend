@@ -48,6 +48,8 @@ import Statistics from '../components/home/Statistics.vue';
 import Swal from 'sweetalert2';
 import { IPersonalData } from '../interfaces/personal.interface';
 import { IModuleOutside } from '../interfaces/moduleOutside.interface';
+import { ISemester, ILaterSemester } from '../interfaces/semester.interface';
+
 const env = import.meta.env;
 
 //Personal Data
@@ -84,6 +86,7 @@ function updateModulesOutsideData(data: Array<IModuleOutside>) {
 
 //Double Degree
 const doubleDegree = ref(false);
+watch(doubleDegree, () => getThesisData());
 
 //Master Thesis
 const masterThesisData: Ref<IThesisDataResponse | null> = ref(null);
@@ -107,14 +110,25 @@ async function getThesisData() {
 }
 
 //Optional English
-const optionalCourses = ref();
+const optionalEnglish = computed(() => {
+    const course = courseData.value?.optional_courses.courses[0];
+    if (!course.selected_semester) {
+        return null;
+    }
+
+    if (course.selected_semester) {
+        return {
+            semesterId: course.selected_semester.id,
+            courses: [course.id],
+        };
+    }
+});
 
 //AdditionalComments
 const additionalComments = ref();
 
 //Statistics
 const ects = ref(0);
-const errors = ref();
 
 function updateEcts(amount: number) {
     ects.value = amount;
@@ -165,8 +179,8 @@ const groupsWithSelectedCourses: ComputedRef<ICourseGroup[] | null> = computed((
     return groupsWithSelected.concat(furtherGroupsWithSelected);
 });
 
-const semesterWithCourses = computed(() => {
-    if (!groupsWithSelectedCourses.value && !courseData.value) {
+const semesterWithCourses: ComputedRef<ISemester[] | ILaterSemester[] | null> = computed(() => {
+    if (!groupsWithSelectedCourses.value || !courseData.value) {
         return null;
     }
     const courses = [];
@@ -177,36 +191,26 @@ const semesterWithCourses = computed(() => {
     const coursesInSemesters = courseData.value.semesters.map((semester) => {
         semester = JSON.parse(JSON.stringify(semester));
         semester.courses = selectedCourses.filter((course) => {
-            return course.selected_semester.id === semester.id;
+            if (course.selected_semester) {
+                //@ts-ignore
+                return course.selected_semester.id === semester.id;
+            }
         });
 
         return semester;
     });
-    const coursesInLater = {
-        name: 'later',
-        courses: selectedCourses.filter((course) => {
-            return course.selected_semester === 'later';
-        }),
-    };
-    return coursesInSemesters.concat(coursesInLater);
+    const coursesInLater = [
+        {
+            name: 'later',
+            courses: selectedCourses.filter((course) => {
+                return course.selected_semester === 'later';
+            }),
+        },
+    ];
+    return [...coursesInSemesters, ...coursesInLater];
 });
 
-watch(doubleDegree, () => getThesisData());
-
-const optionalEnglish = computed(() => {
-    const course = courseData.value?.optional_courses.courses[0];
-    if (!course.selected_semester) {
-        return null;
-    }
-
-    if (course.selected_semester) {
-        return {
-            semesterId: course.selected_semester.id,
-            courses: [course.id],
-        };
-    }
-});
-
+const errors = ref();
 async function createPdf() {
     if (!personalData.value) {
         return;

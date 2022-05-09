@@ -1,13 +1,13 @@
 import { Cluster } from './courseData.interface';
 import { IModel } from './model.interface';
-import { Semester } from './semester.interface';
+import { ISemester } from './semester.interface';
 import { Specialization } from './specialization.interface';
 import { IText } from './text.interface';
 import { Theses } from './theses.interface';
 
 export interface ICourseDataResponse {
     courses: ICourseGroup[][];
-    semesters: Semester[];
+    semesters: ISemester[];
     texts: IText[];
     theses: Theses;
     optional_courses: { courses: ICourse[]; texts: IText[] };
@@ -36,10 +36,10 @@ export interface ICourse extends IModel {
     name: string;
     short_name: string;
     semester_type: number;
-    selected_semester: Semester | String | null;
+    selected_semester: ISemester | String | null;
 }
 
 export interface ISelectedCourses {
     course: ICourse;
-    semester: Semester;
+    semester: ISemester;
 }

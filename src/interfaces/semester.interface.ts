@@ -1,6 +1,7 @@
+import { ICourse } from './course.interface';
 import { IModel } from './model.interface';
 
-export interface Semester extends IModel {
+export interface ISemester extends IModel {
     is_autumn_semester: boolean;
     is_spring_semester: boolean;
     long_name: string;
@@ -10,4 +11,9 @@ export interface Semester extends IModel {
     tooltip: string;
     year: number;
     type: number;
+    courses: ICourse[];
+}
+export interface ILaterSemester {
+    name: string;
+    courses: ICourse[];
 }

@@ -54,7 +54,7 @@ function parseMasterThesis(masterThesis: any) {
         return null;
     }
     return {
-        start: masterThesis.start.id,
+        start: masterThesis.start,
         theses: masterThesis.theses.map((theses) => {
             return theses.id;
         }),
