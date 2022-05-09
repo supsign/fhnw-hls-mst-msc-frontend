@@ -1,7 +1,7 @@
 <template>
     <div class="container p-3 mx-auto">
         <Card>
-            <form action="http://fhnw-hls-mst-msc.loc/api/admin/configuration" enctype="multipart/form-data" method="POST">
+            <form :action="env.VITE_API_URL + '/admin/configuration'" enctype="multipart/form-data" method="POST">
                 Password:
                 <Input label="Password" name="password" type="password" required />
                 <Input label="File" name="config_file" type="file" required />
@@ -22,5 +22,7 @@ import axios from 'axios';
 import Card from '../components/base/Card.vue';
 import Input from '../components/base/Input.vue';
 import { ref } from 'vue';
+
+const env = import.meta.env;
 
 </script>
