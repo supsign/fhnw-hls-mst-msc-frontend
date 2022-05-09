@@ -12,7 +12,7 @@
             </div>
             <div v-for="(semester, index) in semesters" :key="index" class="w-20 text-center flex justify-center">
                 <input
-                    v-if="semester.type === course.semester_type"
+                    v-if="semester.type === course.semester_type && index >= endIndex"
                     type="radio"
                     class="h-5 w-5 my-auto"
                     v-model="course.selected_semester"
@@ -20,23 +20,35 @@
                 />
             </div>
             <div class="w-20 text-center flex justify-center border-r">
-                <input type="radio" class="h-5 w-5 my-auto" v-model="course.selected_semester" value="later" />
+                <input
+                    type="radio"
+                    class="h-5 w-5 my-auto"
+                    v-model="course.selected_semester"
+                    value="later"
+                    v-if="endIndex === -1"
+                />
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue';
+import { computed, PropType, ref } from 'vue';
 import { ICourse } from '../../interfaces/course.interface';
-import { Semester } from '../../interfaces/semester.interface';
+import { ISemester } from '../../interfaces/semester.interface';
 
 const props = defineProps({
     course: { type: Object as PropType<ICourse>, required: true },
-    semesters: Array as PropType<Array<Semester>>,
+    semesters: { type: Array as PropType<Array<ISemester>>, required: true },
     type: String,
     further: Boolean,
     tooltip: String,
 });
-
+const endIndex = computed(() => {
+    return props.semesters.findIndex((semester) => {
+        if (semester.id === props.course.end_semester_id) {
+            return semester;
+        }
+    });
+});
 props.course.selected_semester = null;
 </script>

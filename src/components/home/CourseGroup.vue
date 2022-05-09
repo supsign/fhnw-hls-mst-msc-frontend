@@ -88,12 +88,12 @@
 import { PropType, computed } from 'vue';
 import { ICourseGroup } from '../../interfaces/course.interface';
 import { ICourse } from '../../interfaces/course.interface';
-import { Semester } from '../../interfaces/semester.interface';
+import { ISemester } from '../../interfaces/semester.interface';
 import Course from './Course.vue';
 
 const props = defineProps({
     group: { type: Object as PropType<ICourseGroup>, required: true },
-    semesters: Array as PropType<Array<Semester>>,
+    semesters: Array as PropType<Array<ISemester>>,
 });
 
 function sortCourses(courses: Array<ICourse>) {
