@@ -1,7 +1,7 @@
 <template>
     <div class="container p-3 mx-auto">
         <Card>
-            <form action="http://msc.loc/api/admin/configuration" enctype="multipart/form-data" method="POST">
+            <form action="http://fhnw-hls-mst-msc.loc/api/admin/configuration" enctype="multipart/form-data" method="POST">
                 Password:
                 <Input label="Password" name="password" type="password" />
                 <Input label="File" name="config_file" type="file" />
