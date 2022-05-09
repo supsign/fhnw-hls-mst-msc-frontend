@@ -1,12 +1,9 @@
 <template>
     <div class="flex flex-col gap-5">
         <div class="text-lg font-bold">Summary Statistics</div>
-        <div>{{ groupsWithSelectedCourses[0].courses.length }} of Specialisation Modules</div>
-        <div>
-            {{ groupsWithSelectedCourses[4].courses.length + groupsWithSelectedCourses[5].courses.length }} of
-            Cluster-specific Modules
-        </div>
-        <div>{{ groupsWithSelectedCourses[2].courses.length }} Core Competence Modules</div>
+        <div>{{ specializationModulesCount }} of Specialisation Modules</div>
+        <div>{{ clusterSpecificModulesCount }} of Cluster-specific Modules</div>
+        <div>{{ coreCompetenceModulesCount }} Core Competence Modules</div>
         <div class="flex flex-col w-32">
             <div class="flex border-b">
                 <div class="p-1 w-20">Semester</div>
@@ -35,6 +32,36 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue', 'updateEcts']);
 
+const specializationModulesCount = computed(() => {
+    const group = props.groupsWithSelectedCourses.find((group) => {
+        if (group.type === 1 && group.hasOwnProperty('id')) {
+            return group;
+        }
+    });
+    return group.courses.length;
+});
+
+const coreCompetenceModulesCount = computed(() => {
+    const group = props.groupsWithSelectedCourses.find((group) => {
+        if (group.type === 3 && group.hasOwnProperty('id')) {
+            return group;
+        }
+    });
+    return group.courses.length;
+});
+
+const clusterSpecificModulesCount = computed(() => {
+    const groups = props.groupsWithSelectedCourses.filter((group) => {
+        if (group.type === 4) {
+            return group;
+        }
+    });
+    let count = 0;
+    for (let group of groups) {
+        count += group.courses.length;
+    }
+    return count;
+});
 function getEcts(courses: ICourse[]) {
     let ects = 0;
     for (let course of courses) {

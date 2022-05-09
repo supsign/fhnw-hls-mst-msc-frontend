@@ -75,9 +75,9 @@ function parseSelectedCoursesForPdf(semestersWithCourses: any) {
 
 function getStatistics(groupsWithSelectedCourses: any, ects: number) {
     return {
-        specialization: groupsWithSelectedCourses[0].courses.length,
-        cluster: groupsWithSelectedCourses[4].courses.length + groupsWithSelectedCourses[5].courses.length,
-        core: groupsWithSelectedCourses[2].courses.length,
+        specialization: getSpecializationCount(groupsWithSelectedCourses),
+        cluster: getClusterSpecificModulesCount(groupsWithSelectedCourses),
+        core: getCoreCompetenceModulesCount(groupsWithSelectedCourses),
         ects: ects,
         moduleGroupCount: getModuleGroupCount(groupsWithSelectedCourses),
     };
@@ -93,4 +93,35 @@ function getModuleGroupCount(groupsWithSelectedCourses: any) {
         module.count = module.courses.length;
         return module;
     });
+}
+
+function getSpecializationCount(groupsWithSelectedCourses: any) {
+    const group = groupsWithSelectedCourses.find((group) => {
+        if (group.type === 1 && group.hasOwnProperty('id')) {
+            return group;
+        }
+    });
+    return group.courses.length;
+}
+
+function getCoreCompetenceModulesCount(groupsWithSelectedCourses: any) {
+    const group = groupsWithSelectedCourses.find((group) => {
+        if (group.type === 3 && group.hasOwnProperty('id')) {
+            return group;
+        }
+    });
+    return group.courses.length;
+}
+
+function getClusterSpecificModulesCount(groupsWithSelectedCourses: any) {
+    const groups = groupsWithSelectedCourses.filter((group) => {
+        if (group.type === 4) {
+            return group;
+        }
+    });
+    let count = 0;
+    for (let group of groups) {
+        count += group.courses.length;
+    }
+    return count;
 }
