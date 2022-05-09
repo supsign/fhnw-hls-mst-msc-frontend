@@ -51,7 +51,6 @@ interface IStatistics {
 }
 
 export function pdfDataService(data: pdfDataServiceInput) {
-    console.log('HI', data);
     const parsedData: parsedPdfDataInput = {
         surname: data.personalData.surname,
         given_name: data.personalData.givenName,

@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import Personal from '../components/home/Personal.vue';
 import axios from 'axios';
-import { Ref, ref, watch, computed, ComputedRef, toRaw } from 'vue';
+import { Ref, ref, watch, computed, ComputedRef } from 'vue';
 import ModulesOutside from '../components/home/ModulesOutside.vue';
 import DoubleDegree from '../components/home/DoubleDegree.vue';
 import OptionalEnglish from '../components/home/OptionalEnglish.vue';
@@ -244,8 +244,6 @@ async function createPdf() {
             confirmButtonText: 'OK',
         });
     }
-    console.log(pdfData.value);
-
     const filename = await axios.post('/pdf', pdfData.value);
     window.open(env.VITE_BACKEND_URL + '/' + filename.data);
 }

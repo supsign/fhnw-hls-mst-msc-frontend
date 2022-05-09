@@ -1,5 +1,4 @@
 export function validateData(pdfData: any) {
-    console.log(pdfData);
     const errorBag = [];
 
     if (!pdfData.surname) {
