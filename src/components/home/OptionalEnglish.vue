@@ -1,7 +1,7 @@
 <template>
     <div v-if="courseData">
         <div class="mb-5 text-lg font-bold">Optional English Class for MSc Students (no ECTS gained)</div>
-        <div v-html="description.content" class="mb-5"></div>
+        <div v-if="description" v-html="description.content" class="mb-5"></div>
 
         <div class="flex">
             <div class="w-[26rem] p-1 border-b"></div>
@@ -18,16 +18,15 @@
     </div>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/reactivity';
-import { inject, PropType, provide } from 'vue';
-import { CourseDataResponse } from '../../interfaces/courseData.interface';
+import { PropType } from 'vue';
+import { ICourseDataResponse } from '../../interfaces/course.interface';
+import { IText } from '../../interfaces/text.interface';
 import Course from './Course.vue';
 const props = defineProps({
-    courseData: { type: Object as PropType<CourseDataResponse>, required: true },
+    courseData: { type: Object as PropType<ICourseDataResponse>, required: true },
 });
 const emits = defineEmits(['update:modelValue']);
 
-const description = props.courseData.optional_courses?.texts.find(
-    (text) => text.name === 'optional_english_description'
-);
+const description: IText | null =
+    props.courseData.optional_courses?.texts.find((text) => text.name === 'optional_english_description') || null;
 </script>

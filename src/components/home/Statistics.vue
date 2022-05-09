@@ -20,15 +20,22 @@
                 <div class="p-1 w-12 text-right border-b border-r">{{ ects }}</div>
             </div>
         </div>
+        <div>
+            Possible Timeframe of Thesis: {{ dayjs(masterThesis?.start.start.start_date).format('DD.MM.YYYY') }} -
+            {{ dayjs(masterThesis?.start.end).format('DD.MM.YYYY') }}
+        </div>
     </div>
 </template>
 <script setup lang="ts">
 import { computed } from '@vue/reactivity';
+import { PropType } from 'vue';
 import { ICourse } from '../../interfaces/course.interface';
-
+import { Theses } from '../../interfaces/theses.interface';
+import dayjs from 'dayjs';
 const props = defineProps({
     groupsWithSelectedCourses: Array,
     semesterWithCourses: Array,
+    masterThesis: Object as PropType<Theses>,
 });
 const emits = defineEmits(['update:modelValue', 'updateEcts']);
 

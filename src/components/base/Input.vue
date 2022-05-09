@@ -11,9 +11,11 @@
     </div>
 </template>
 <script setup lang="ts">
+import { PropType } from 'vue';
+
 const props = defineProps({
     label: String,
-    modelValue: String,
+    modelValue: Object as PropType<any>,
 });
 defineEmits(['update:modelValue']);
 </script>

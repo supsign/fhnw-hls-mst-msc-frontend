@@ -12,10 +12,10 @@
             <MasterThesis :data="masterThesisData" v-model="masterThesis" />
             <OptionalEnglish :course-data="courseData" />
             <AdditionalComments v-model="additionalComments" />
-
             <Statistics
                 :groupsWithSelectedCourses="groupsWithSelectedCourses"
                 :semesterWithCourses="semesterWithCourses"
+                :master-thesis="masterThesis"
                 @update-ects="updateEcts"
             />
 
@@ -33,22 +33,21 @@
 <script setup lang="ts">
 import Personal from '../components/home/Personal.vue';
 import axios from 'axios';
-import { Ref, ref, watch, computed } from 'vue';
+import { Ref, ref, watch, computed, ComputedRef, toRaw } from 'vue';
 import ModulesOutside from '../components/home/ModulesOutside.vue';
 import DoubleDegree from '../components/home/DoubleDegree.vue';
 import OptionalEnglish from '../components/home/OptionalEnglish.vue';
 import AdditionalComments from '../components/home/AdditionalComments.vue';
-import { ICourseDataResponse } from '../interfaces/course.interface';
-import { OutsideModule } from '../interfaces/outsideModule.interface';
+import { ICourseDataResponse, ICourseGroup } from '../interfaces/course.interface';
 import MasterThesis from '../components/home/MasterThesis.vue';
-import { Theses, ThesesSelection } from '../interfaces/theses.interface';
+import { IThesisDataResponse, IThesisSelection } from '../interfaces/theses.interface';
 import CourseSelection from '../components/home/CourseSelection.vue';
 import Card from '../components/base/Card.vue';
 import { pdfDataService } from '../services/pdfData.service';
 import Statistics from '../components/home/Statistics.vue';
 import Swal from 'sweetalert2';
-import { useRouter } from 'vue-router';
 import { IPersonalData } from '../interfaces/personal.interface';
+import { IModuleOutside } from '../interfaces/moduleOutside.interface';
 const env = import.meta.env;
 
 //Personal Data
@@ -76,31 +75,56 @@ async function getCourseData() {
     getThesisData();
 }
 
-const outsideModules: Ref<Array<OutsideModule> | undefined> = ref();
-const modulesOutside: Ref<Array<OutsideModule> | undefined> = ref();
+//Modules Outside
+const modulesOutside: Ref<Array<IModuleOutside> | null> = ref(null);
+
+function updateModulesOutsideData(data: Array<IModuleOutside>) {
+    modulesOutside.value = data;
+}
+
+//Double Degree
 const doubleDegree = ref(false);
-const masterThesisData: Ref<Theses | undefined> = ref();
-const masterThesis: Ref<ThesesSelection> = ref({
-    start: undefined,
+
+//Master Thesis
+const masterThesisData: Ref<IThesisDataResponse | null> = ref(null);
+const masterThesis: Ref<IThesisSelection> = ref({
+    start: null,
     theses: [],
     furtherDetails: '',
 });
-const additionalComments = ref();
+
+async function getThesisData() {
+    if (!personalData.value?.specialization || !personalData.value.semester || !personalData.value.studyMode) {
+        return;
+    }
+    const response = await axios.post<IThesisDataResponse>(`/thesisdata/${personalData.value.specialization.id}`, {
+        double_degree: doubleDegree.value,
+        semester: personalData.value?.semester.id,
+        study_mode: personalData.value?.studyMode.id,
+    });
+    masterThesisData.value = response.data;
+    masterThesis.value.start = response.data.time_frames[0];
+}
+
+//Optional English
 const optionalCourses = ref();
+
+//AdditionalComments
+const additionalComments = ref();
+
+//Statistics
 const ects = ref(0);
 const errors = ref();
 
-const router = useRouter();
 function updateEcts(amount: number) {
     ects.value = amount;
 }
 
-const groupsWithSelectedCourses = computed(() => {
+const groupsWithSelectedCourses: ComputedRef<ICourseGroup[] | null> = computed(() => {
     if (!courseData.value) {
         return null;
     }
-    const courseDataGroups = JSON.parse(JSON.stringify(courseData.value));
-    //@ts-ignore
+    const courseDataGroups: ICourseDataResponse = JSON.parse(JSON.stringify(courseData.value));
     const groups = courseDataGroups.courses[0];
     const groupsWithSelected = groups.map((group) => {
         group.courses = group.courses.filter((course) => {
@@ -169,18 +193,6 @@ const semesterWithCourses = computed(() => {
 
 watch(doubleDegree, () => getThesisData());
 
-async function getThesisData() {
-    if (!personalData.value?.specialization || !personalData.value.semester || !personalData.value.studyMode) {
-        return;
-    }
-    const response = await axios.post(`/thesisdata/${personalData.value.specialization.id}`, {
-        double_degree: doubleDegree.value,
-        semester: personalData.value?.semester.id,
-        study_mode: personalData.value?.studyMode.id,
-    });
-    masterThesisData.value = response.data;
-    masterThesis.value.start = response.data.starts[0];
-}
 const optionalEnglish = computed(() => {
     const course = courseData.value?.optional_courses.courses[0];
     if (!course.selected_semester) {
@@ -195,13 +207,6 @@ const optionalEnglish = computed(() => {
     }
 });
 
-function updatePersonalData(personal: PersonalData) {
-    personalData.value = personal;
-}
-function updateModulesOutsideData(modulesOutside: Array<OutsideModule>) {
-    outsideModules.value = modulesOutside;
-}
-
 async function createPdf() {
     if (!personalData.value) {
         return;
@@ -214,7 +219,7 @@ async function createPdf() {
         studyMode: personalData.value.studyMode,
         specialization: personalData.value.specialization,
         semestersWithCourses: semesterWithCourses.value,
-        outsideModules: outsideModules.value,
+        outsideModules: modulesOutside.value,
         doubleDegree: doubleDegree.value,
         masterThesis: masterThesis.value,
         optionalCourses: optionalEnglish.value,

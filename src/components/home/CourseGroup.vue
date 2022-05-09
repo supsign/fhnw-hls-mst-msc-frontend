@@ -85,20 +85,17 @@
     </div>
 </template>
 <script setup lang="ts">
-import { PropType } from 'vue';
-import { CourseGroup } from '../../interfaces/courseData.interface';
+import { PropType, computed } from 'vue';
+import { ICourseGroup } from '../../interfaces/course.interface';
 import { ICourse } from '../../interfaces/course.interface';
 import { Semester } from '../../interfaces/semester.interface';
-import { SelectedCourses } from '../../interfaces/selectedCourses.interface';
 import Course from './Course.vue';
-import { computed } from '@vue/reactivity';
 
 const props = defineProps({
-    group: { type: Object as PropType<CourseGroup>, required: true },
+    group: { type: Object as PropType<ICourseGroup>, required: true },
     semesters: Array as PropType<Array<Semester>>,
 });
 
-const emits = defineEmits();
 function sortCourses(courses: Array<ICourse>) {
     return courses.sort((a, b) => a.semester_type - b.semester_type);
 }
@@ -113,6 +110,6 @@ const count = computed(() => {
         }
         return count;
     }
-    return null;
+    return 0;
 });
 </script>

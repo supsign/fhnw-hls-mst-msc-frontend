@@ -1,7 +1,12 @@
 <template>
     <div v-if="data" class="flex flex-col gap-5">
         <div class="text-lg font-bold">Master Thesis</div>
-        <Select label="Start of MSc Thesis" :options="data.starts" v-model="value.start" />
+        <Select
+            label="Start of MSc Thesis"
+            :options="data.time_frames"
+            v-model="value.start"
+            option_labels="start.long_name"
+        />
         <Select
             label="Start of MSc Thesis"
             :options="data.theses"
@@ -22,18 +27,17 @@
     </div>
 </template>
 <script setup lang="ts">
-import { computed } from '@vue/reactivity';
-import { PropType } from 'vue';
-import { Theses, ThesesSelection } from '../../interfaces/theses.interface';
+import { PropType, computed, WritableComputedRef } from 'vue';
+import { IThesisDataResponse, IThesisSelection } from '../../interfaces/theses.interface';
 import Select from '../base/Select.vue';
 
 const props = defineProps({
-    data: Object as PropType<Theses>,
-    modelValue: Object,
+    data: Object as PropType<IThesisDataResponse>,
+    modelValue: { type: Object as PropType<IThesisSelection>, required: true },
 });
 const emits = defineEmits(['update:modelValue']);
 
-const value = computed<ThesesSelection>({
+const value: WritableComputedRef<IThesisSelection> = computed({
     get() {
         return props.modelValue;
     },

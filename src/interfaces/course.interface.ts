@@ -6,7 +6,7 @@ import { IText } from './text.interface';
 import { Theses } from './theses.interface';
 
 export interface ICourseDataResponse {
-    courses: [ICourseGroup[]];
+    courses: ICourseGroup[][];
     semesters: Semester[];
     texts: IText[];
     theses: Theses;

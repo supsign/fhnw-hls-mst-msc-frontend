@@ -10,9 +10,13 @@
         >
             <template v-if="options.length > 0">
                 <option v-if="placeholder" value="null" disabled selected>{{ placeholder }}</option>
-                <option v-for="(option, index) in options" :key="index" :value="option" class="border-t border-gray-50">
-                    {{ options_label ? option[options_label] : option['name'] }}
-                </option>
+                <option
+                    v-for="(option, index) in options"
+                    :key="index"
+                    :value="option"
+                    class="border-t border-gray-50 appearance-none"
+                    :label="getLabel(option)"
+                ></option>
             </template>
             <template v-else>
                 <option class="border-t border-gray-50" disabled>No Options available</option>
@@ -25,8 +29,8 @@ import { computed } from '@vue/reactivity';
 import { PropType } from 'vue';
 const props = defineProps({
     label: String,
-    options: { type: Array, required: true },
-    options_label: String,
+    options: { type: Array as PropType<Array<any>>, required: true },
+    option_labels: String,
     placeholder: String,
     modelValue: Object as PropType<any>,
     tooltip: String,
@@ -42,4 +46,20 @@ const value = computed({
         emits('update:modelValue', value);
     },
 });
+
+function getLabel(option: any) {
+    console.log(option);
+    if (!props.option_labels) {
+        return option['name'];
+    }
+    const strings = props.option_labels.split('.').map((s) => [s]);
+    console.log(strings);
+    if (strings.length === 1) {
+        //@ts-ignore
+        return option[strings[0]];
+    } else {
+        //@ts-ignore
+        return option[strings[0]][strings[1]];
+    }
+}
 </script>

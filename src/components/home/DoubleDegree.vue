@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="mb-5 text-lg font-bold">Double Degree Option</div>
-        <div v-html="description.content" class="mb-7"></div>
+        <div v-if="description" v-html="description.content" class="mb-7"></div>
         <div class="flex">
             <input
                 type="checkbox"
@@ -14,10 +14,15 @@
     </div>
 </template>
 <script setup lang="ts">
+import { PropType } from 'vue';
+import { IText } from '../../interfaces/text.interface';
+
 const props = defineProps({
-    texts: Array,
+    texts: { type: Array as PropType<Array<IText>>, required: true },
     modelValue: Boolean,
 });
+
 defineEmits(['update:modelValue']);
-const description = props.texts?.find((text) => text.name === 'double_degree_description');
+
+const description: IText | null = props.texts.find((text) => text.name === 'double_degree_description') || null;
 </script>

@@ -8,7 +8,7 @@
         <Select
             label="Study Mode"
             :options="data.studyMode.studyModes"
-            options_label="label"
+            option_labels="label"
             v-model="value.studyMode"
             :tooltip="data.studyMode.tooltip"
             @change="emits('getCourseData')"

@@ -1,15 +1,15 @@
 <template>
     <div>
         <div class="mb-5 text-lg font-bold">Modules outside the Curriculum</div>
-        <div v-html="description.content" class="mb-5"></div>
+        <div v-if="description" v-html="description.content" class="mb-5"></div>
         <div class="flex flex-col gap-5">
-            <div v-for="(module, index) in outsideModules" :key="index" class="flex gap-10">
+            <div v-for="(module, index) in modulesOutsideArray" :key="index" class="flex gap-10">
                 <Input label="Module Title" v-model="module.title" />
                 <Input label="ECTS" type="number" v-model="module.ects" />
                 <Input label="University" v-model="module.university" />
                 <div
                     v-if="index"
-                    @click="outsideModules.splice(index, 1)"
+                    @click="modulesOutsideArray.splice(index, 1)"
                     class="transition transform duration-300 ease-in-out text-white py-1 px-4 rounded-md shadow-sm bg-red-600 hover:bg-red-700 hover:shadow-xl cursor-pointer h-10 flex items-center mt-6"
                 >
                     Remove
@@ -28,20 +28,23 @@
 </template>
 <script setup lang="ts">
 import { whenever } from '@vueuse/core';
-import { Ref, ref } from 'vue';
+import { PropType, Ref, ref } from 'vue';
+import { IModuleOutside } from '../../interfaces/moduleOutside.interface';
 import { OutsideModule } from '../../interfaces/outsideModule.interface';
+import { IText } from '../../interfaces/text.interface';
 import Input from '../base/Input.vue';
 const props = defineProps({
-    texts: Array,
+    texts: { type: Array as PropType<Array<IText>>, required: true },
 });
 const emits = defineEmits(['updateModulesOutsideData']);
-const description = props.texts?.find((text) => text.name === 'modules_outside_description');
-const outsideModules: Ref<Array<OutsideModule>> = ref([{ title: '', ects: undefined, university: '' }]);
+const description: IText | null = props.texts.find((text) => text.name === 'modules_outside_description') || null;
+const modulesOutsideArray: Ref<Array<IModuleOutside>> = ref([{ title: '', ects: null, university: '' }]);
 
 function addNewModule() {
-    outsideModules.value.push({ title: '', ects: undefined, university: '' });
+    modulesOutsideArray.value.push({ title: '', ects: null, university: '' });
 }
-whenever(outsideModules.value, (value) => {
+// @ts-ignore
+whenever(modulesOutsideArray.value, (value) => {
     emits('updateModulesOutsideData', value);
 });
 </script>
