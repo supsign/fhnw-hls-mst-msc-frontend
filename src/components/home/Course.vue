@@ -1,6 +1,6 @@
 <template>
-    <div class="flex hover:bg-gray-50">
-        <div class="w-[26rem] border-b border-l border-r p-1" :title="course.content">
+    <div class="flex hover:bg-gray-50" :title="course.content">
+        <div class="w-[26rem] border-b border-l border-r p-1">
             {{ course.name }}
         </div>
         <div class="w-10 border-r border-b p-1" v-if="!further" :title="tooltip">

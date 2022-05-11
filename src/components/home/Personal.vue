@@ -23,10 +23,9 @@
     </div>
 </template>
 <script setup lang="ts">
-import { onBeforeMount, PropType, Ref, ref, WritableComputedRef } from 'vue';
+import { onBeforeMount, PropType, ref, WritableComputedRef } from 'vue';
 import axios from 'axios';
 import { IPersonalDataResponse, IPersonalData } from '../../interfaces/personal.interface';
-import { whenever } from '@vueuse/core';
 import Input from '../base/Input.vue';
 import Select from '../base/Select.vue';
 import Introduction from './Introduction.vue';

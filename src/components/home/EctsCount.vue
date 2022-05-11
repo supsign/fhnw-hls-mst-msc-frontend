@@ -1,7 +1,7 @@
 <template>
-    <div class="sticky top-0 bg-hls p-2 z-10 self-start">
+    <div class="sticky top-0 shadow-xl bg-white border p-2 z-10 self-start">
         <div v-if="description" v-html="description.content"></div>
-        <div>Current ECTS: {{ ects }}/50</div>
+        <div :class="ects < 50 ? 'text-red-500' : 'text-green-600'">Current ECTS: {{ ects }}/50</div>
     </div>
 </template>
 <script setup lang="ts">

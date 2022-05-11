@@ -7,13 +7,16 @@
             v-model="value.start"
             option_labels="start.long_name"
         />
-        <Select
-            label="Start of MSc Thesis"
-            :options="data.theses"
-            v-model="value.theses"
-            multiple
-            :size="data.theses.length"
-        />
+        <div>
+            <Select
+                label="Start of MSc Thesis"
+                :options="data.theses"
+                v-model="value.theses"
+                multiple
+                :size="data.theses.length"
+            />
+            <div class="text-sm my-2">You may select multiple subject with CRTL</div>
+        </div>
         <div>
             <label for="furtherDetails" class="px-1 bg-white text-gray-400"
                 >Further Details on MSc Topic (optional)</label
