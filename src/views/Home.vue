@@ -111,26 +111,6 @@ async function getThesisData() {
     masterThesis.value.start = response.data.time_frames[0];
 }
 
-//Optional English
-//@ts-ignore
-const optionalEnglish: ComputedRef<ISemester[]> = computed(() => {
-    if (!courseData.value) {
-        return [
-            {
-                semesterId: null,
-                courses: [],
-            },
-        ];
-    }
-    const course = courseData.value.optional_courses.courses[0];
-    return [
-        {
-            semesterId: course.selected_semester ? course.selected_semester : null,
-            courses: [course],
-        },
-    ];
-});
-
 //AdditionalComments
 const additionalComments = ref();
 
@@ -194,6 +174,12 @@ const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
     for (let group of groupsWithSelectedCourses.value) {
         courses.push(group.courses);
     }
+    for (let optional of courseData.value.optional_courses.courses) {
+        if (optional.selected_semester) {
+            courses.push(optional);
+        }
+    }
+
     const selectedCourses = courses.flat(1);
     const coursesInSemesters = courseData.value.semesters.map((semester) => {
         semester = JSON.parse(JSON.stringify(semester));
@@ -230,7 +216,6 @@ async function createPdf() {
         modulesOutside: modulesOutside.value,
         doubleDegree: doubleDegree.value,
         masterThesis: masterThesis.value,
-        optionalCourses: optionalEnglish.value,
         additionalComments: additionalComments.value,
         groupsWithSelectedCourses: groupsWithSelectedCourses.value,
         ects: ects.value,
