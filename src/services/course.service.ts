@@ -1,18 +1,17 @@
-import { ISlot } from '../interfaces/course.interface';
+import { ICourse, ISlot, SemesterWithOverlappingCourses } from '../interfaces/course.interface';
 import { ISemester } from '../interfaces/semester.interface';
 
-export function checkOverlappingCourses(semestersWithCourses: ISemester[], slots: ISlot[]) {
-    console.log(slots);
-    const doubleStore = [];
-    for (let semester of semestersWithCourses) {
+export function getOverlappingCourses(semestersWithCourses: ISemester[], slots: ISlot[]) {
+    const semesterWithOverlappingCourses: SemesterWithOverlappingCourses[] = [];
+    semestersWithCourses.forEach((semester, index) => {
+        semesterWithOverlappingCourses.push({ semester, courses: [] });
         for (let slot of slots) {
             const slotCourses = semester.courses.filter((course) => course.slot_id === slot.id);
             if (slotCourses.length > 1) {
-                doubleStore.push(slotCourses);
+                semesterWithOverlappingCourses[index].courses.push(slotCourses);
             }
         }
-    }
-    return doubleStore.sort((a, b) => {
-        return a[0].start_semester_id - b[0].start_semester_id;
     });
+
+    return semesterWithOverlappingCourses;
 }
