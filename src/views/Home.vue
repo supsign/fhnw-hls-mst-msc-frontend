@@ -1,6 +1,6 @@
 <template>
     <div class="container p-3 mx-auto">
-        <Warning :overlapping-courses="overlappingCourses" />
+        <Warning :overlapping-courses="overlappingCourses" v-if="overlappingCourses.length" />
         <Card>
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
