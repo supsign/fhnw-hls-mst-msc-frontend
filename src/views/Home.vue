@@ -1,5 +1,6 @@
 <template>
     <div class="container p-3 mx-auto">
+        <Warning />
         <Card>
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
@@ -51,6 +52,7 @@ import Swal from 'sweetalert2';
 import { IPersonalData } from '../interfaces/personal.interface';
 import { IModuleOutside } from '../interfaces/moduleOutside.interface';
 import { ISemester } from '../interfaces/semester.interface';
+import Warning from '../components/home/Warning.vue';
 
 const env = import.meta.env;
 
