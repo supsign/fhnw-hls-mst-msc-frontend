@@ -1,5 +1,6 @@
 <template>
     <div class="container p-3 mx-auto">
+        <Warning :overlapping-courses="overlappingCourses" />
         <Card>
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
@@ -51,6 +52,8 @@ import Swal from 'sweetalert2';
 import { IPersonalData } from '../interfaces/personal.interface';
 import { IModuleOutside } from '../interfaces/moduleOutside.interface';
 import { ISemester } from '../interfaces/semester.interface';
+import Warning from '../components/home/Warning.vue';
+import { checkOverlappingCourses } from '../services/course.service';
 
 const env = import.meta.env;
 
@@ -203,6 +206,12 @@ const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
     return [...coursesInSemesters, ...coursesInLater];
 });
 
+const overlappingCourses = computed(() => {
+    if (!courseData.value) {
+        return [];
+    }
+    return checkOverlappingCourses(semesterWithCourses.value, courseData.value.slots);
+});
 const errors = ref();
 async function createPdf() {
     if (!personalData.value) {

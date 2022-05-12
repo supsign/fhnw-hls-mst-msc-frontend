@@ -8,6 +8,7 @@ export interface ICourseDataResponse {
     courses: ICourseGroup[][];
     semesters: ISemester[];
     texts: IText[];
+    slots: ISlot[];
     theses: IThesis;
     optional_courses: { courses: ICourse[]; texts: IText[] };
 }
@@ -37,8 +38,9 @@ export interface ICourse extends IModel {
     short_name: string;
     semester_type: number;
     selected_semester: ISemester | String | null;
+    slot_id: number;
+    start_semester_id: number;
     type_label_short: string;
-}
 
 export interface ISelectedCourses {
     course: ICourse;
@@ -47,5 +49,9 @@ export interface ISelectedCourses {
 export interface ICluster extends IModel {
     core_competences: string;
     courses: ICourse[];
+    name: string;
+}
+
+export interface ISlot extends IModel {
     name: string;
 }
