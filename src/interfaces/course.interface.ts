@@ -37,6 +37,7 @@ export interface ICourse extends IModel {
     short_name: string;
     semester_type: number;
     selected_semester: ISemester | String | null;
+    type_label_short: string;
 }
 
 export interface ISelectedCourses {
