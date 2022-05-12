@@ -8,7 +8,9 @@
                         src="../assets/logos/fhnw-logo-klein.png"
                         alt="Logo FHNW"
                     />
-                    <div class="my-auto text-lg text-black hover:text-black">FHNW MST MSc</div>
+                    <div class="my-auto text-lg text-black hover:text-black">
+                        MSc in Life Scienes FHWN – Plan your studies
+                    </div>
                 </div>
             </div>
         </div>

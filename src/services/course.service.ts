@@ -1,4 +1,4 @@
-import { ICourse, ISlot, SemesterWithOverlappingCourses } from '../interfaces/course.interface';
+import { ISlot, SemesterWithOverlappingCourses } from '../interfaces/course.interface';
 import { ISemester } from '../interfaces/semester.interface';
 
 export function getOverlappingCourses(semestersWithCourses: ISemester[], slots: ISlot[]) {

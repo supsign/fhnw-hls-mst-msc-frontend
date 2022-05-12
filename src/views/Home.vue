@@ -1,7 +1,9 @@
 <template>
     <div class="container p-3 mx-auto">
-        <Warning :semesters-with-overlapping-courses="overlappingCourses" v-if="overlappingCourses.length" />
-        <Card>
+        <div ref="warningBlock" class="sticky ml-auto top-60" v-if="overlappingCourses.length">
+            <Warning :semesters-with-overlapping-courses="overlappingCourses" />
+        </div>
+        <Card :style="`margin-top: -${warningBlock?.offsetHeight}px`">
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
         <Card v-if="courseData">
@@ -56,7 +58,7 @@ import Warning from '../components/home/Warning.vue';
 import { getOverlappingCourses } from '../services/course.service';
 
 const env = import.meta.env;
-
+const warningBlock = ref<HTMLInputElement | null>(null);
 //Personal Data
 const personalData: Ref<IPersonalData> = ref({
     surname: '',
@@ -210,7 +212,11 @@ const overlappingCourses = computed(() => {
     if (!courseData.value) {
         return [];
     }
-    return getOverlappingCourses(semesterWithCourses.value, courseData.value.slots);
+    const overlapping = getOverlappingCourses(semesterWithCourses.value, courseData.value.slots);
+    if (overlapping.every((semester) => semester.courses.length === 0)) {
+        return [];
+    }
+    return overlapping;
 });
 const errors = ref();
 async function createPdf() {
