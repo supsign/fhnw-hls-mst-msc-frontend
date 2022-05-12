@@ -159,7 +159,7 @@ function getCoreCompetenceModulesCount(groupsWithSelectedCourses: ICourseGroup[]
 
 function getClusterSpecificModulesCount(groupsWithSelectedCourses: ICourseGroup[]) {
     const groups = groupsWithSelectedCourses.filter((group) => {
-        if (group.type === 4) {
+        if (group.type === 4 && group.hasOwnProperty('id')) {
             return group;
         }
     });
