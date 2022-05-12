@@ -40,7 +40,7 @@ export interface ICourse extends IModel {
     selected_semester: ISemester | String | null;
     slot_id: number;
     start_semester_id: number;
-}
+    type_label_short: string;
 
 export interface ISelectedCourses {
     course: ICourse;

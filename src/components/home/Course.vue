@@ -3,8 +3,8 @@
         <div class="w-[26rem] border-b border-l border-r p-1">
             {{ course.name }}
         </div>
-        <div class="w-10 border-r border-b p-1" v-if="!further" :title="tooltip">
-            {{ type }}
+        <div class="w-10 border-r border-b p-1" :title="tooltip">
+            {{ course.type_label_short }}
         </div>
         <div class="border-b flex gap-5">
             <div class="w-20 text-center flex justify-center">

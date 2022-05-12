@@ -25,7 +25,6 @@ import Course from './Course.vue';
 const props = defineProps({
     courseData: { type: Object as PropType<ICourseDataResponse>, required: true },
 });
-const emits = defineEmits(['update:modelValue']);
 
 const description: IText | null =
     props.courseData.optional_courses?.texts.find((text) => text.name === 'optional_english_description') || null;
