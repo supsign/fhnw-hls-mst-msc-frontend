@@ -12,7 +12,7 @@
             </div>
             <div v-for="(semester, index) in semesters" :key="index" class="w-20 text-center flex justify-center">
                 <input
-                    v-if="semester.type === course.semester_type && index >= endIndex"
+                    v-if="semester.type === course.semester_type && checkEndDate(semester, course.end_semester)"
                     type="radio"
                     class="h-5 w-5 my-auto"
                     v-model="course.selected_semester"
@@ -25,16 +25,19 @@
                     class="h-5 w-5 my-auto"
                     v-model="course.selected_semester"
                     value="later"
-                    v-if="endIndex === -1"
+                    v-if="laterIsVisible(semesters, course.end_semester)"
                 />
             </div>
         </div>
     </div>
 </template>
 <script setup lang="ts">
-import { computed, PropType, ref } from 'vue';
+import dayjs from 'dayjs';
+import { PropType } from 'vue';
+import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
 import { ICourse } from '../../interfaces/course.interface';
 import { ISemester } from '../../interfaces/semester.interface';
+dayjs.extend(isSameOrAfter);
 
 const props = defineProps({
     course: { type: Object as PropType<ICourse>, required: true },
@@ -43,12 +46,27 @@ const props = defineProps({
     further: Boolean,
     tooltip: String,
 });
-const endIndex = computed(() => {
-    return props.semesters.findIndex((semester) => {
-        if (semester.id === props.course.end_semester_id) {
-            return semester;
-        }
-    });
-});
+
+function checkEndDate(semester: ISemester, endSemester: ISemester) {
+    if (!endSemester) {
+        return true;
+    }
+    if (dayjs(endSemester.start_date).isSameOrAfter(dayjs(semester.start_date))) {
+        return true;
+    }
+    return false;
+}
+
+function laterIsVisible(semesters: ISemester[], endSemester: ISemester) {
+    if (!endSemester) {
+        return true;
+    }
+    const lastSemester = semesters[semesters.length - 1];
+    if (dayjs(endSemester.start_date).isAfter(dayjs(lastSemester.start_date))) {
+        return true;
+    }
+    return false;
+}
+
 props.course.selected_semester = null;
 </script>

@@ -32,7 +32,7 @@ export interface ICourseGroup extends IModel {
 export interface ICourse extends IModel {
     content: string;
     ects: number;
-    end_semester_id: number;
+    end_semester: ISemester;
     internal_name: string;
     name: string;
     short_name: string;

@@ -51,15 +51,15 @@ const allCourses = computed(() => {
 });
 
 const specializationModulesCount = computed(() => {
-    return allCourses.value.filter((course) => course.type === 1);
+    return allCourses.value.filter((course) => course.type === 1).length;
 });
 
 const coreCompetenceModulesCount = computed(() => {
-    return allCourses.value.filter((course) => course.type === 3);
+    return allCourses.value.filter((course) => course.type === 3).length;
 });
 
 const clusterSpecificModulesCount = computed(() => {
-    return allCourses.value.filter((course) => course.type === 4);
+    return allCourses.value.filter((course) => course.type === 4).length;
 });
 
 function getEcts(courses: ICourse[]) {
