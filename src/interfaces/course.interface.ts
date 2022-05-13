@@ -41,6 +41,8 @@ export interface ICourse extends IModel {
     slot_id: number;
     start_semester_id: number;
     type_label_short: string;
+    type_tooltip: string;
+    type: number;
 }
 
 export interface ISelectedCourses {

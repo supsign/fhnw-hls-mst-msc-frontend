@@ -74,7 +74,6 @@
                     :course="course"
                     :type="group.course_group_type_short_name"
                     :semesters="semesters"
-                    :tooltip="group.tooltip"
                 />
                 <div
                     class="flex justify-end"

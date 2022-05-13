@@ -3,7 +3,7 @@
         <div class="w-[26rem] border-b border-l border-r p-1">
             {{ course.name }}
         </div>
-        <div class="w-10 border-r border-b p-1" :title="tooltip">
+        <div class="w-10 border-r border-b p-1" :title="course.type_tooltip">
             {{ course.type_label_short }}
         </div>
         <div class="border-b flex gap-5">

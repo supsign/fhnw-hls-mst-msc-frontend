@@ -42,42 +42,26 @@ const props = defineProps({
 });
 const emits = defineEmits(['update:modelValue', 'updateEcts']);
 
+const allCourses = computed(() => {
+    return props.groupsWithSelectedCourses
+        .map((group) => {
+            return group.courses;
+        })
+        .flat(1);
+});
+
 const specializationModulesCount = computed(() => {
-    const group = props.groupsWithSelectedCourses.find((group) => {
-        if (group.type === 1 && group.hasOwnProperty('id')) {
-            return group;
-        }
-    });
-    if (group) {
-        return group.courses.length;
-    }
-    return 0;
+    return allCourses.value.filter((course) => course.type === 1);
 });
 
 const coreCompetenceModulesCount = computed(() => {
-    const group = props.groupsWithSelectedCourses.find((group) => {
-        if (group.type === 3 && group.hasOwnProperty('id')) {
-            return group;
-        }
-    });
-    if (group) {
-        return group.courses.length;
-    }
-    return 0;
+    return allCourses.value.filter((course) => course.type === 3);
 });
 
 const clusterSpecificModulesCount = computed(() => {
-    const groups = props.groupsWithSelectedCourses.filter((group) => {
-        if (group.type === 4) {
-            return group;
-        }
-    });
-    let count = 0;
-    for (let group of groups) {
-        count += group.courses.length;
-    }
-    return count;
+    return allCourses.value.filter((course) => course.type === 4);
 });
+
 function getEcts(courses: ICourse[]) {
     let ects = 0;
     for (let course of courses) {
