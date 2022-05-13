@@ -13,7 +13,6 @@ interface pdfDataServiceInput {
     modulesOutside: IModuleOutside[];
     doubleDegree: boolean;
     masterThesis: IThesisSelection;
-    optionalCourses: ISemester[];
     additionalComments: string;
     ects: number;
     groupsWithSelectedCourses: ICourseGroup[];
@@ -28,12 +27,11 @@ interface parsedPdfDataInput {
     modules_outside: IModuleOutside[];
     double_degree: boolean;
     master_thesis: IThesisForPdf | null;
-    optional_courses: ISelectedCoursesForPdf[];
     additional_comments: string;
     statistics: IStatistics;
 }
 interface ISelectedCoursesForPdf {
-    semesterId: number;
+    semesterId: number | string;
     courses: number[];
 }
 
@@ -64,7 +62,6 @@ export function pdfDataService(data: pdfDataServiceInput) {
         modules_outside: data.modulesOutside,
         double_degree: data.doubleDegree,
         master_thesis: parseMasterThesis(JSON.parse(JSON.stringify(data.masterThesis))),
-        optional_courses: parseOptionalCoursesForPdf(data.optionalCourses),
         additional_comments: data.additionalComments,
         statistics: getStatistics(data.groupsWithSelectedCourses, data.ects),
     };
@@ -93,17 +90,7 @@ function parseMasterThesis(masterThesis: IThesisSelection): IThesisForPdf | null
 function parseSelectedCoursesForPdf(semestersWithCourses: ISemester[]): ISelectedCoursesForPdf[] {
     return semestersWithCourses.map((semester) => {
         return {
-            semesterId: semester.id,
-            courses: semester.courses.map((course) => {
-                return course.id;
-            }),
-        };
-    });
-}
-function parseOptionalCoursesForPdf(semestersWithCourses: ISemester[]): ISelectedCoursesForPdf[] {
-    return semestersWithCourses.map((semester) => {
-        return {
-            semesterId: semester.id,
+            semesterId: semester.id ? semester.id : semester.name,
             courses: semester.courses.map((course) => {
                 return course.id;
             }),
@@ -159,7 +146,7 @@ function getCoreCompetenceModulesCount(groupsWithSelectedCourses: ICourseGroup[]
 
 function getClusterSpecificModulesCount(groupsWithSelectedCourses: ICourseGroup[]) {
     const groups = groupsWithSelectedCourses.filter((group) => {
-        if (group.type === 4) {
+        if (group.type === 4 && group.hasOwnProperty('id')) {
             return group;
         }
     });

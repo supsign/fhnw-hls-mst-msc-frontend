@@ -20,7 +20,7 @@
                 :master-thesis="masterThesis"
                 @update-ects="updateEcts"
             />
-
+            <Warning :semesters-with-overlapping-courses="overlappingCourses" v-if="overlappingCourses.length" />
             <div class="flex justify-end">
                 <button
                     @click="createPdf"
@@ -51,9 +51,11 @@ import Swal from 'sweetalert2';
 import { IPersonalData } from '../interfaces/personal.interface';
 import { IModuleOutside } from '../interfaces/moduleOutside.interface';
 import { ISemester } from '../interfaces/semester.interface';
+import Warning from '../components/home/Warning.vue';
+import { getOverlappingCourses } from '../services/course.service';
 
 const env = import.meta.env;
-
+const warningBlock = ref<HTMLInputElement | null>(null);
 //Personal Data
 const personalData: Ref<IPersonalData> = ref({
     surname: '',
@@ -110,26 +112,6 @@ async function getThesisData() {
     masterThesisData.value = response.data;
     masterThesis.value.start = response.data.time_frames[0];
 }
-
-//Optional English
-//@ts-ignore
-const optionalEnglish: ComputedRef<ISemester[]> = computed(() => {
-    if (!courseData.value) {
-        return [
-            {
-                semesterId: null,
-                courses: [],
-            },
-        ];
-    }
-    const course = courseData.value.optional_courses.courses[0];
-    return [
-        {
-            semesterId: course.selected_semester ? course.selected_semester : null,
-            courses: [course],
-        },
-    ];
-});
 
 //AdditionalComments
 const additionalComments = ref();
@@ -194,6 +176,12 @@ const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
     for (let group of groupsWithSelectedCourses.value) {
         courses.push(group.courses);
     }
+    for (let optional of courseData.value.optional_courses.courses) {
+        if (optional.selected_semester) {
+            courses.push(optional);
+        }
+    }
+
     const selectedCourses = courses.flat(1);
     const coursesInSemesters = courseData.value.semesters.map((semester) => {
         semester = JSON.parse(JSON.stringify(semester));
@@ -217,6 +205,16 @@ const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
     return [...coursesInSemesters, ...coursesInLater];
 });
 
+const overlappingCourses = computed(() => {
+    if (!courseData.value) {
+        return [];
+    }
+    const overlapping = getOverlappingCourses(semesterWithCourses.value, courseData.value.slots);
+    if (overlapping.every((semester) => semester.courses.length === 0)) {
+        return [];
+    }
+    return overlapping;
+});
 const errors = ref();
 async function createPdf() {
     if (!personalData.value) {
@@ -230,7 +228,6 @@ async function createPdf() {
         modulesOutside: modulesOutside.value,
         doubleDegree: doubleDegree.value,
         masterThesis: masterThesis.value,
-        optionalCourses: optionalEnglish.value,
         additionalComments: additionalComments.value,
         groupsWithSelectedCourses: groupsWithSelectedCourses.value,
         ects: ects.value,

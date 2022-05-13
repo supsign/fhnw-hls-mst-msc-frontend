@@ -6,7 +6,7 @@
         <div class="mb-5" v-html="group.description"></div>
         <div class="flex">
             <div class="w-[26rem] p-1 border-b font-bold">Module</div>
-            <div class="w-10 border-b font-bold" v-if="group.courses">Type</div>
+            <div class="w-10 border-b font-bold">Type</div>
             <div class="flex gap-5 border-b">
                 <div class="w-20 text-center font-bold">none</div>
                 <div
@@ -23,7 +23,8 @@
         <template v-if="group.specializations">
             <div v-for="(specialization, index) in group.specializations" :key="index">
                 <div class="flex">
-                    <div class="w-[26rem] p-1 border-x border-b font-bold">{{ specialization.name }}</div>
+                    <div class="w-[26rem] p-1 border-l border-b font-bold">{{ specialization.name }}</div>
+                    <div class="w-10 border-b"></div>
                     <div class="flex gap-5 border-b" v-if="semesters">
                         <div
                             v-for="index in semesters.length + 2"
@@ -45,7 +46,8 @@
         <template v-if="group.clusters">
             <div v-for="(cluster, index) in group.clusters" :key="index">
                 <div class="flex">
-                    <div class="w-[26rem] p-1 border-x border-b font-bold">{{ cluster.name }}</div>
+                    <div class="w-[26rem] p-1 border-l border-b font-bold">{{ cluster.name }}</div>
+                    <div class="w-10 border-b"></div>
                     <div class="flex gap-5 border-b" v-if="semesters">
                         <div
                             v-for="index in semesters.length + 2"
@@ -72,7 +74,6 @@
                     :course="course"
                     :type="group.course_group_type_short_name"
                     :semesters="semesters"
-                    :tooltip="group.tooltip"
                 />
                 <div
                     class="flex justify-end"
