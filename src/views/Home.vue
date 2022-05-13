@@ -1,9 +1,6 @@
 <template>
     <div class="container p-3 mx-auto">
-        <div ref="warningBlock" class="sticky ml-auto top-60" v-if="overlappingCourses.length">
-            <Warning :semesters-with-overlapping-courses="overlappingCourses" />
-        </div>
-        <Card :style="`margin-top: -${warningBlock?.offsetHeight}px`">
+        <Card>
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
         <Card v-if="courseData">
@@ -23,7 +20,7 @@
                 :master-thesis="masterThesis"
                 @update-ects="updateEcts"
             />
-
+            <Warning :semesters-with-overlapping-courses="overlappingCourses" v-if="overlappingCourses.length" />
             <div class="flex justify-end">
                 <button
                     @click="createPdf"
