@@ -21,8 +21,8 @@
             </div>
         </div>
         <div>
-            Possible Timeframe of Thesis: {{ dayjs(masterThesis?.start.start.start_date).format('DD.MM.YYYY') }} -
-            {{ dayjs(masterThesis?.start.end).format('DD.MM.YYYY') }}
+            Possible Timeframe of Thesis: {{ masterThesis?.start.start.long_name }} -
+            {{ masterThesis?.start.end }}
         </div>
     </div>
 </template>
