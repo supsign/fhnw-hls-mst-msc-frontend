@@ -3,7 +3,9 @@
         <div class="text-lg font-bold">Summary Statistics</div>
         <div>{{ statistics.specialization }} of Specialisation Modules</div>
         <div>{{ statistics.cluster }} of Cluster-specific Modules</div>
-        <div>{{ statistics.core }} Core Competence Modules</div>
+        <div>{{ statistics.core }} of Core Competence Modules</div>
+        <div>{{ statistics.outside }} of Modules outside the Curriculum</div>
+
         <div class="flex flex-col w-32">
             <div class="flex border-b">
                 <div class="p-1 w-20">Semester</div>

@@ -127,6 +127,7 @@ const statistics: ComputedRef<IStatistics> = computed(() => {
         specialization: allCourses.filter((course) => course.type === 1).length,
         core: allCourses.filter((course) => course.type === 3).length,
         cluster: allCourses.filter((course) => course.type === 4).length,
+        outside: modulesOutside.value.length,
         ects: getEcts(semesterWithCourses.value, modulesOutside.value),
         moduleGroupCount: getModuleGroupCount(groupsWithSelectedCourses.value),
     };

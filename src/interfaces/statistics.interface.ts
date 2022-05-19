@@ -3,5 +3,6 @@ export interface IStatistics {
     cluster: number;
     core: number;
     ects: number;
+    outside: number;
     moduleGroupCount: any;
 }
