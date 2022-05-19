@@ -7,15 +7,15 @@
             v-model="value.start"
             option_labels="start.long_name"
         />
+        <div v-if="text" v-html="text.content"></div>
         <div>
             <Select
-                label="Start of MSc Thesis"
+                label="Subject of the MSc Thesis"
                 :options="data.theses"
                 v-model="value.theses"
                 multiple
                 :size="data.theses.length"
             />
-            <div class="text-sm my-2">You may select multiple subject with CRTL</div>
         </div>
         <div>
             <label for="furtherDetails" class="px-1 bg-white text-gray-400"
@@ -31,14 +31,18 @@
 </template>
 <script setup lang="ts">
 import { PropType, computed, WritableComputedRef } from 'vue';
+import { IText } from '../../interfaces/text.interface';
 import { IThesisDataResponse, IThesisSelection } from '../../interfaces/theses.interface';
 import Select from '../base/Select.vue';
 
 const props = defineProps({
-    data: Object as PropType<IThesisDataResponse>,
+    data: { type: Object as PropType<IThesisDataResponse>, required: true },
     modelValue: { type: Object as PropType<IThesisSelection>, required: true },
 });
+
 const emits = defineEmits(['update:modelValue']);
+
+const text: IText | null = props.data.texts.find((text) => text.name === 'thesis_text') || null;
 
 const value: WritableComputedRef<IThesisSelection> = computed({
     get() {

@@ -23,13 +23,13 @@
     </div>
 </template>
 <script setup lang="ts">
-import { onBeforeMount, PropType, ref, WritableComputedRef } from 'vue';
+import { onBeforeMount, PropType, ref, WritableComputedRef, computed } from 'vue';
 import axios from 'axios';
 import { IPersonalDataResponse, IPersonalData } from '../../interfaces/personal.interface';
 import Input from '../base/Input.vue';
 import Select from '../base/Select.vue';
 import Introduction from './Introduction.vue';
-import { computed } from '@vue/reactivity';
+
 const props = defineProps({
     modelValue: { type: Object as PropType<IPersonalData>, required: true },
 });

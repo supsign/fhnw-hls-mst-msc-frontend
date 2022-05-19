@@ -1,5 +1,6 @@
 import { IModel } from './model.interface';
 import { ISemester } from './semester.interface';
+import { IText } from './text.interface';
 
 export interface IThesis extends IModel {
     name: string;
@@ -8,6 +9,7 @@ export interface IThesis extends IModel {
 export interface IThesisDataResponse {
     theses: IThesis[];
     time_frames: IThesisTimeFrame[];
+    texts: IText[];
 }
 export interface IThesisTimeFrame {
     end: string;
