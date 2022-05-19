@@ -1,7 +1,13 @@
 <template>
     <div v-if="texts">
-        <div v-if="title" class="text-2xl mb-2" v-html="title.content"></div>
-        <div v-if="description" v-html="description.content"></div>
+        <div class="mb-10">
+            <div v-if="title" class="text-2xl mb-2" v-html="title.content"></div>
+            <div v-if="description" v-html="description.content"></div>
+        </div>
+        <div>
+            <div v-if="hintsTitle" class="font-bold mb-2" v-html="hintsTitle.content"></div>
+            <div v-if="hintsList" v-html="hintsList.content"></div>
+        </div>
     </div>
 </template>
 <script setup lang="ts">
@@ -14,4 +20,14 @@ const props = defineProps({
 
 const title: IText | null = props.texts.find((text) => text.name === 'intro_title') || null;
 const description: IText | null = props.texts.find((text) => text.name === 'intro_content') || null;
+const hintsTitle: IText | null = props.texts.find((text) => text.name === 'hints_title') || null;
+const hintsList: IText | null = props.texts.find((text) => text.name === 'hints_list') || null;
 </script>
+<style>
+ul {
+    list-style: disc inside;
+}
+li {
+    margin: 1px 0px;
+}
+</style>

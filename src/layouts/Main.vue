@@ -9,7 +9,7 @@
                         alt="Logo FHNW"
                     />
                     <div class="my-auto text-lg text-black hover:text-black">
-                        MSc in Life Scienes FHWN – Plan your studies
+                        MSc in Life Sciences FHNW – Plan your studies
                     </div>
                 </div>
             </div>
@@ -19,11 +19,11 @@
     <main class="h-screen">
         <router-view />
     </main>
-    <!-- <footer class="p-2 mt-auto text-xs text-white bg-gray-700">
+    <footer class="p-2 fixed bottom-0 w-full text-xs text-white bg-gray-700">
         <div class="text-center sm:flex sm:justify-between">
             <a href="https://supsign.ch" target="_blank" rel="noopener noreferrer" class="block mb-2 sm:mb-0">
                 &copy; Made with &hearts; in Switzerland by Supsign AG
             </a>
         </div>
-    </footer>-->
+    </footer>
 </template>
