@@ -4,7 +4,7 @@
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
         <Card v-if="courseData">
-            <CourseSelection :course-data="courseData" :ects="ects" />
+            <CourseSelection :course-data="courseData" :ects="statistics.ects" />
         </Card>
         <Card v-if="courseData && masterThesisData">
             <ModulesOutside :texts="courseData.texts" @updateModulesOutsideData="updateModulesOutsideData" />
@@ -13,12 +13,10 @@
             <OptionalEnglish :course-data="courseData" />
             <AdditionalComments v-model="additionalComments" />
             <Statistics
-                v-if="groupsWithSelectedCourses && semesterWithCourses"
-                :groupsWithSelectedCourses="groupsWithSelectedCourses"
+                v-if="semesterWithCourses"
                 :semesterWithCourses="semesterWithCourses"
-                :modules-outside="modulesOutside"
                 :master-thesis="masterThesis"
-                @update-ects="updateEcts"
+                :statistics="statistics"
             />
             <Warning :semesters-with-overlapping-courses="overlappingCourses" v-if="overlappingCourses.length" />
             <div class="flex justify-end">
@@ -53,6 +51,8 @@ import { IModuleOutside } from '../interfaces/moduleOutside.interface';
 import { ISemester } from '../interfaces/semester.interface';
 import Warning from '../components/home/Warning.vue';
 import { getOverlappingCourses } from '../services/course.service';
+import { IStatistics } from '../interfaces/statistics.interface';
+import { getEcts, getModuleGroupCount } from '../helpers/counts';
 
 const env = import.meta.env;
 const warningBlock = ref<HTMLInputElement | null>(null);
@@ -95,7 +95,7 @@ watch(doubleDegree, () => getThesisData());
 //Master Thesis
 const masterThesisData: Ref<IThesisDataResponse | null> = ref(null);
 const masterThesis: Ref<IThesisSelection> = ref({
-    start: null,
+    start: { start: null, end: '' },
     theses: [],
     furtherDetails: '',
 });
@@ -117,11 +117,21 @@ async function getThesisData() {
 const additionalComments = ref();
 
 //Statistics
-const ects = ref(0);
-
-function updateEcts(amount: number) {
-    ects.value = amount;
-}
+const statistics: ComputedRef<IStatistics> = computed(() => {
+    const allCourses = groupsWithSelectedCourses.value
+        .map((group) => {
+            return group.courses;
+        })
+        .flat(1);
+    return {
+        specialization: allCourses.filter((course) => course.type === 1).length,
+        core: allCourses.filter((course) => course.type === 3).length,
+        cluster: allCourses.filter((course) => course.type === 4).length,
+        outside: modulesOutside.value.length,
+        ects: getEcts(semesterWithCourses.value, modulesOutside.value),
+        moduleGroupCount: getModuleGroupCount(groupsWithSelectedCourses.value),
+    };
+});
 
 const groupsWithSelectedCourses: ComputedRef<ICourseGroup[]> = computed(() => {
     if (!courseData.value) {
@@ -167,6 +177,7 @@ const groupsWithSelectedCourses: ComputedRef<ICourseGroup[]> = computed(() => {
     });
     return groupsWithSelected.concat(furtherGroupsWithSelected);
 });
+
 //@ts-ignore
 const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
     if (!groupsWithSelectedCourses.value || !courseData.value) {
@@ -230,7 +241,7 @@ async function createPdf() {
         masterThesis: masterThesis.value,
         additionalComments: additionalComments.value,
         groupsWithSelectedCourses: groupsWithSelectedCourses.value,
-        ects: ects.value,
+        statistics: statistics.value,
     });
     if (pdfData.value.hasOwnProperty('errors')) {
         errors.value = pdfData.value;

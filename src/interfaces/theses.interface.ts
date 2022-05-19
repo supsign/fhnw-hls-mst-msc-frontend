@@ -13,7 +13,7 @@ export interface IThesisDataResponse {
 }
 export interface IThesisTimeFrame {
     end: string;
-    start: ISemester;
+    start: ISemester | null;
 }
 
 export interface ThesisRequestData {
@@ -21,7 +21,7 @@ export interface ThesisRequestData {
 }
 
 export interface IThesisSelection {
-    start: IThesisTimeFrame | null;
+    start: IThesisTimeFrame;
     theses: IThesis[] | [];
     furtherDetails: string;
 }
