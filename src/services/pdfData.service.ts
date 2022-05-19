@@ -4,6 +4,7 @@ import { IModuleOutside } from '../interfaces/moduleOutside.interface';
 import { IPersonalData } from '../interfaces/personal.interface';
 import { ISemester } from '../interfaces/semester.interface';
 import { ISpecialization } from '../interfaces/specialization.interface';
+import { IStatistics } from '../interfaces/statistics.interface';
 import { IStudyMode } from '../interfaces/studyMode.interface';
 import { IThesisSelection, IThesisTimeFrame } from '../interfaces/theses.interface';
 
@@ -14,7 +15,7 @@ interface pdfDataServiceInput {
     doubleDegree: boolean;
     masterThesis: IThesisSelection;
     additionalComments: string;
-    ects: number;
+    statistics: IStatistics;
     groupsWithSelectedCourses: ICourseGroup[];
 }
 interface parsedPdfDataInput {
@@ -40,13 +41,6 @@ interface IThesisForPdf {
     theses: number[];
     further_details: string;
 }
-interface IStatistics {
-    specialization: number;
-    cluster: number;
-    core: number;
-    ects: number;
-    moduleGroupCount: any;
-}
 
 export function pdfDataService(data: pdfDataServiceInput) {
     const parsedData: parsedPdfDataInput = {
@@ -63,7 +57,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
         double_degree: data.doubleDegree,
         master_thesis: parseMasterThesis(JSON.parse(JSON.stringify(data.masterThesis))),
         additional_comments: data.additionalComments,
-        statistics: getStatistics(data.groupsWithSelectedCourses, data.ects),
+        statistics: data.statistics,
     };
     const validator = validateData(parsedData);
 
@@ -96,63 +90,4 @@ function parseSelectedCoursesForPdf(semestersWithCourses: ISemester[]): ISelecte
             }),
         };
     });
-}
-
-function getStatistics(groupsWithSelectedCourses: ICourseGroup[], ects: number) {
-    return {
-        specialization: getSpecializationCount(groupsWithSelectedCourses),
-        cluster: getClusterSpecificModulesCount(groupsWithSelectedCourses),
-        core: getCoreCompetenceModulesCount(groupsWithSelectedCourses),
-        ects: ects,
-        moduleGroupCount: getModuleGroupCount(groupsWithSelectedCourses),
-    };
-}
-
-function getModuleGroupCount(groupsWithSelectedCourses: ICourseGroup[]) {
-    const filterModules = groupsWithSelectedCourses.filter((group) => {
-        if (group.hasOwnProperty('id')) {
-            return group;
-        }
-    });
-    return filterModules.map((module) => {
-        module.count = module.courses.length;
-        return module;
-    });
-}
-
-function getSpecializationCount(groupsWithSelectedCourses: ICourseGroup[]) {
-    const group = groupsWithSelectedCourses.find((group) => {
-        if (group.type === 1 && group.hasOwnProperty('id')) {
-            return group;
-        }
-    });
-    if (group) {
-        return group.courses.length;
-    }
-    return 0;
-}
-
-function getCoreCompetenceModulesCount(groupsWithSelectedCourses: ICourseGroup[]) {
-    const group = groupsWithSelectedCourses.find((group) => {
-        if (group.type === 3 && group.hasOwnProperty('id')) {
-            return group;
-        }
-    });
-    if (group) {
-        return group.courses.length;
-    }
-    return 0;
-}
-
-function getClusterSpecificModulesCount(groupsWithSelectedCourses: ICourseGroup[]) {
-    const groups = groupsWithSelectedCourses.filter((group) => {
-        if (group.type === 4 && group.hasOwnProperty('id')) {
-            return group;
-        }
-    });
-    let count = 0;
-    for (let group of groups) {
-        count += group.courses.length;
-    }
-    return count;
 }
