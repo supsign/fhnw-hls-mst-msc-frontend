@@ -19,7 +19,7 @@
                 :statistics="statistics"
             />
             <Warning
-                v-if="selectedLaterCount"
+                v-if="selectedLaterCount || overlappingCourses"
                 :semesters-with-overlapping-courses="overlappingCourses"
                 :selected-later-count="selectedLaterCount"
             />
