@@ -4,7 +4,13 @@
         <div class="text-lg font-bold">Personal Data</div>
         <Input label="Surname" v-model="value.surname" />
         <Input label="Given Name" v-model="value.givenName" />
-        <Select label="Semester" :options="data.semesters" v-model="value.semester" @change="emits('getCourseData')" />
+        <Select
+            label="Semester"
+            :options="data.semesters"
+            v-model="value.semester"
+            @change="emits('getCourseData')"
+            option_labels="long_name_with_short"
+        />
         <Select
             label="Study Mode"
             :options="data.studyMode.studyModes"

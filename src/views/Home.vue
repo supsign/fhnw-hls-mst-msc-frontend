@@ -1,5 +1,5 @@
 <template>
-    <div class="container p-3 mx-auto">
+    <div class="container p-3 mx-auto pb-10">
         <Card>
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
