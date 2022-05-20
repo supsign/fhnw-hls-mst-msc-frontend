@@ -235,7 +235,11 @@ const overlappingCourses = computed(() => {
     if (overlapping.every((semester) => semester.courses.length === 0)) {
         return [];
     }
-    return overlapping;
+    return overlapping.filter((obj) => {
+        if (obj.semester.hasOwnProperty('id')) {
+            return obj;
+        }
+    });
 });
 
 const selectedLaterCount = computed(() => {
