@@ -1,10 +1,10 @@
 <template>
-    <div class="container p-3 mx-auto">
+    <div class="container p-3 mx-auto pb-10">
         <Card>
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
         <Card v-if="courseData">
-            <CourseSelection :course-data="courseData" :ects="statistics ? statistics.ects : 0" />
+            <CourseSelection :course-data="courseData" :statistics="statistics" />
         </Card>
         <Card v-if="courseData && masterThesisData">
             <ModulesOutside :texts="courseData.texts" @updateModulesOutsideData="updateModulesOutsideData" />
