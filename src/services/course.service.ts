@@ -1,8 +1,8 @@
-import { ISlot, SemesterWithOverlappingCourses } from '../interfaces/course.interface';
+import { ISlot, ISemesterWithOverlappingCourses } from '../interfaces/course.interface';
 import { ISemester } from '../interfaces/semester.interface';
 
 export function getOverlappingCourses(semestersWithCourses: ISemester[], slots: ISlot[]) {
-    const semesterWithOverlappingCourses: SemesterWithOverlappingCourses[] = [];
+    const semesterWithOverlappingCourses: ISemesterWithOverlappingCourses[] = [];
     semestersWithCourses.forEach((semester, index) => {
         semesterWithOverlappingCourses.push({ semester, courses: [] });
         for (let slot of slots) {

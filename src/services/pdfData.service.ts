@@ -94,14 +94,18 @@ function parseSelectedCoursesForPdf(semestersWithCourses: ISemester[]): ISelecte
     });
 }
 function parseOverlappingCourses(semesterWithOverlappingCourses: ISemesterWithOverlappingCourses[]) {
-    return semesterWithOverlappingCourses.map((obj) => {
-        return {
-            semester: obj.semester.id,
-            courses: obj.courses.map((coursePair) => {
-                return coursePair.map((course) => {
-                    return course.id;
-                });
-            }),
-        };
-    });
+    return semesterWithOverlappingCourses
+        .map((obj) => {
+            return {
+                semesterId: obj.semester.hasOwnProperty('id') ? obj.semester.id : obj.semester.name,
+                courses: obj.courses.map((coursePair) => {
+                    return coursePair.map((course) => {
+                        return course.id;
+                    });
+                }),
+            };
+        })
+        .filter((obj) => {
+            if (obj.courses.length > 0) return obj;
+        });
 }
