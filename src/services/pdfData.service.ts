@@ -1,5 +1,5 @@
 import { validateData } from '../helpers/validation';
-import { ICourseGroup } from '../interfaces/course.interface';
+import { ICourseGroup, ISemesterWithOverlappingCourses } from '../interfaces/course.interface';
 import { IModuleOutside } from '../interfaces/moduleOutside.interface';
 import { IPersonalData } from '../interfaces/personal.interface';
 import { ISemester } from '../interfaces/semester.interface';
@@ -17,6 +17,7 @@ interface pdfDataServiceInput {
     additionalComments: string;
     statistics: IStatistics;
     groupsWithSelectedCourses: ICourseGroup[];
+    overlappingCourses: ISemesterWithOverlappingCourses[];
 }
 interface parsedPdfDataInput {
     surname: string;
@@ -58,6 +59,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
         master_thesis: parseMasterThesis(JSON.parse(JSON.stringify(data.masterThesis))),
         additional_comments: data.additionalComments,
         statistics: data.statistics,
+        overlapping_courses: parseOverlappingCourses(data.overlappingCourses),
     };
     const validator = validateData(parsedData);
 
@@ -90,4 +92,20 @@ function parseSelectedCoursesForPdf(semestersWithCourses: ISemester[]): ISelecte
             }),
         };
     });
+}
+function parseOverlappingCourses(semesterWithOverlappingCourses: ISemesterWithOverlappingCourses[]) {
+    return semesterWithOverlappingCourses
+        .map((obj) => {
+            return {
+                semesterId: obj.semester.hasOwnProperty('id') ? obj.semester.id : obj.semester.name,
+                courses: obj.courses.map((coursePair) => {
+                    return coursePair.map((course) => {
+                        return course.id;
+                    });
+                }),
+            };
+        })
+        .filter((obj) => {
+            if (obj.courses.length > 0) return obj;
+        });
 }
