@@ -1,6 +1,6 @@
 <template>
     <div class="shadow-xl bg-orange-400 p-2 rounded-md">
-        <div class="font-bold text-lg mb-3">Warnings</div>
+        <div class="font-bold text-lg mb-3">Warning</div>
         <div class="flex flex-col">
             <div class="flex gap-10 flex-wrap" v-if="semestersWithOverlappingCourses.length">
                 <div class="font-bold mb-3">Overlapping Courses</div>
