@@ -4,7 +4,7 @@
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
         <Card v-if="courseData">
-            <CourseSelection :course-data="courseData" :statistics="statistics" />
+            <CourseSelection :course-data="courseData" :statistics="statistics" v-if="statistics" />
         </Card>
         <Card v-if="courseData && masterThesisData">
             <ModulesOutside :texts="courseData.texts" @updateModulesOutsideData="updateModulesOutsideData" />
@@ -19,9 +19,10 @@
                 :statistics="statistics"
             />
             <Warning
-                v-if="selectedLaterCount || overlappingCourses"
+                v-if="selectedLaterCount || overlappingCourses.length || blockCoursesAtEndOfSemester?.courses.length"
                 :semesters-with-overlapping-courses="overlappingCourses"
                 :selected-later-count="selectedLaterCount"
+                :block-courses-at-end-of-semester="blockCoursesAtEndOfSemester"
             />
             <div class="flex justify-end">
                 <button
@@ -240,6 +241,20 @@ const overlappingCourses = computed(() => {
             return obj;
         }
     });
+});
+
+const blockCoursesAtEndOfSemester: ComputedRef<ISemester | null> = computed(() => {
+    if (!semesterWithCourses.value) {
+        return null;
+    }
+    const semester = semesterWithCourses.value[semesterWithCourses.value.length - 2];
+
+    semester.courses = semester.courses.filter((course) => {
+        if (course.block) {
+            return course;
+        }
+    });
+    return semester;
 });
 
 const selectedLaterCount = computed(() => {

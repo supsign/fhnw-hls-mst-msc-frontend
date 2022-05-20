@@ -43,6 +43,7 @@ export interface ICourse extends IModel {
     type_label_short: string;
     type_tooltip: string;
     type: number;
+    block: boolean;
 }
 
 export interface ISelectedCourses {
