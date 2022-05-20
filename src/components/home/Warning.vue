@@ -28,7 +28,7 @@
 import { PropType } from 'vue';
 import { ISemesterWithOverlappingCourses } from '../../interfaces/course.interface';
 const props = defineProps({
-    semestersWithOverlappingCourses: { type: Array as PropType<Array<SemesterWithOverlappingCourses>>, required: true },
+    semestersWithOverlappingCourses: { type: Array as PropType<Array<ISemesterWithOverlappingCourses>>, required: true },
     selectedLaterCount: Number,
 });
 </script>
