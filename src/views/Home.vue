@@ -4,7 +4,7 @@
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
         <Card v-if="courseData">
-            <CourseSelection :course-data="courseData" :ects="statistics.ects" />
+            <CourseSelection :course-data="courseData" :statistics="statistics" />
         </Card>
         <Card v-if="courseData && masterThesisData">
             <ModulesOutside :texts="courseData.texts" @updateModulesOutsideData="updateModulesOutsideData" />
