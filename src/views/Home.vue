@@ -242,6 +242,7 @@ async function createPdf() {
         additionalComments: additionalComments.value,
         groupsWithSelectedCourses: groupsWithSelectedCourses.value,
         statistics: statistics.value,
+        overlappingCourses: overlappingCourses.value,
     });
     if (pdfData.value.hasOwnProperty('errors')) {
         errors.value = pdfData.value;

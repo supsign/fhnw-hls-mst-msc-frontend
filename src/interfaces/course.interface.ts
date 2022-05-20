@@ -58,7 +58,7 @@ export interface ICluster extends IModel {
 export interface ISlot extends IModel {
     name: string;
 }
-export interface SemesterWithOverlappingCourses {
+export interface ISemesterWithOverlappingCourses {
     semester: ISemester;
     courses: ICourse[][];
 }

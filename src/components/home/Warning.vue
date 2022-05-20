@@ -17,8 +17,8 @@
 </template>
 <script setup lang="ts">
 import { PropType } from 'vue';
-import { SemesterWithOverlappingCourses } from '../../interfaces/course.interface';
+import { ISemesterWithOverlappingCourses } from '../../interfaces/course.interface';
 const props = defineProps({
-    semestersWithOverlappingCourses: Array as PropType<Array<SemesterWithOverlappingCourses>>,
+    semestersWithOverlappingCourses: Array as PropType<Array<ISemesterWithOverlappingCourses>>,
 });
 </script>
