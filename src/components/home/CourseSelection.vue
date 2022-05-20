@@ -6,7 +6,7 @@
             :group="group"
             :semesters="courseData.semesters"
         />
-        <EctsCount :texts="courseData.texts" :ects="ects" />
+        <EctsCount :texts="courseData.texts" :statistics="statistics" />
         <CourseGroup
             v-for="(group, index) in courseData.courses[1]"
             :key="index"
@@ -18,11 +18,12 @@
 <script setup lang="ts">
 import { PropType } from 'vue';
 import { ICourseDataResponse } from '../../interfaces/course.interface';
+import { IStatistics } from '../../interfaces/statistics.interface';
 import CourseGroup from './CourseGroup.vue';
 import EctsCount from './EctsCount.vue';
 
 defineProps({
     courseData: { type: Object as PropType<ICourseDataResponse>, required: true },
-    ects: Number,
+    statistics: { type: Object as PropType<IStatistics>, required: true },
 });
 </script>

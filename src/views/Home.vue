@@ -4,7 +4,7 @@
             <Personal v-model="personalData" @getCourseData="getCourseData" />
         </Card>
         <Card v-if="courseData">
-            <CourseSelection :course-data="courseData" :ects="statistics.ects" />
+            <CourseSelection :course-data="courseData" :statistics="statistics" />
         </Card>
         <Card v-if="courseData && masterThesisData">
             <ModulesOutside :texts="courseData.texts" @updateModulesOutsideData="updateModulesOutsideData" />
@@ -13,12 +13,16 @@
             <OptionalEnglish :course-data="courseData" />
             <AdditionalComments v-model="additionalComments" />
             <Statistics
-                v-if="semesterWithCourses"
+                v-if="semesterWithCourses && statistics"
                 :semesterWithCourses="semesterWithCourses"
                 :master-thesis="masterThesis"
                 :statistics="statistics"
             />
-            <Warning :semesters-with-overlapping-courses="overlappingCourses" v-if="overlappingCourses.length" />
+            <Warning
+                v-if="selectedLaterCount"
+                :semesters-with-overlapping-courses="overlappingCourses"
+                :selected-later-count="selectedLaterCount"
+            />
             <div class="flex justify-end">
                 <button
                     @click="createPdf"
@@ -117,12 +121,18 @@ async function getThesisData() {
 const additionalComments = ref();
 
 //Statistics
-const statistics: ComputedRef<IStatistics> = computed(() => {
+const statistics: ComputedRef<IStatistics | null> = computed(() => {
+    if (!groupsWithSelectedCourses.value) {
+        return null;
+    }
     const allCourses = groupsWithSelectedCourses.value
         .map((group) => {
             return group.courses;
         })
         .flat(1);
+    if (!semesterWithCourses.value || !modulesOutside.value) {
+        return null;
+    }
     return {
         specialization: allCourses.filter((course) => course.type === 1).length,
         core: allCourses.filter((course) => course.type === 3).length,
@@ -216,6 +226,7 @@ const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
     return [...coursesInSemesters, ...coursesInLater];
 });
 
+//Warning
 const overlappingCourses = computed(() => {
     if (!courseData.value) {
         return [];
@@ -226,13 +237,27 @@ const overlappingCourses = computed(() => {
     }
     return overlapping;
 });
+
+const selectedLaterCount = computed(() => {
+    if (!semesterWithCourses.value) {
+        return 0;
+    }
+    const laterSemester = semesterWithCourses.value.find((semester) => semester.name === 'later');
+    if (!laterSemester) {
+        return 0;
+    }
+    return laterSemester.courses.length;
+});
+
 const errors = ref();
 async function createPdf() {
     if (!personalData.value) {
         return;
     }
     const pdfData = ref();
-
+    if (!statistics.value) {
+        return;
+    }
     pdfData.value = pdfDataService({
         personalData: personalData.value,
         semestersWithCourses: semesterWithCourses.value,
