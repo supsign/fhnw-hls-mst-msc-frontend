@@ -1,4 +1,6 @@
-export function validateData(pdfData: any) {
+import { parsedPdfDataInput } from '../services/pdfData.service';
+
+export function validateData(pdfData: parsedPdfDataInput) {
     const errorBag = [];
 
     if (!pdfData.surname) {
@@ -20,6 +22,12 @@ export function validateData(pdfData: any) {
             if (group.required_courses_count > group.count) {
                 errorBag.push(`You have not selected enough modules in ${group.name}. Please correct`);
             }
+        }
+    }
+    if (pdfData.statistics.moduleGroupCount.findIndex((group) => group.type === 3) === -1) {
+        console.log(pdfData.statistics.moduleGroupCount.findIndex((group) => group.type === 3));
+        if (pdfData.statistics.cluster < 3) {
+            errorBag.push('You need to select at least three cluster-specific modules. Please correct.');
         }
     }
     if (pdfData.statistics.ects < 50) {

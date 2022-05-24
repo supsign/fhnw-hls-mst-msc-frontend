@@ -22,6 +22,6 @@ export interface ThesisRequestData {
 
 export interface IThesisSelection {
     start: IThesisTimeFrame;
-    theses: IThesis[] | [];
+    theses: IThesis[];
     furtherDetails: string;
 }

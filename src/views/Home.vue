@@ -74,6 +74,7 @@ const personalData: Ref<IPersonalData> = ref({
 const courseData: Ref<ICourseDataResponse | null> = ref(null);
 
 async function getCourseData() {
+    resetData();
     if (!personalData.value.specialization || !personalData.value.studyMode || !personalData.value.semester) {
         return;
     }
@@ -136,8 +137,8 @@ const statistics: ComputedRef<IStatistics | null> = computed(() => {
     }
     return {
         specialization: allCourses.filter((course) => course.type === 1).length,
-        core: allCourses.filter((course) => course.type === 3).length,
-        cluster: allCourses.filter((course) => course.type === 4).length,
+        core: allCourses.filter((course) => course.type === 4).length,
+        cluster: allCourses.filter((course) => course.type === 3).length,
         outside: modulesOutside.value.length,
         ects: getEcts(semesterWithCourses.value, modulesOutside.value),
         moduleGroupCount: getModuleGroupCount(groupsWithSelectedCourses.value),
@@ -205,26 +206,22 @@ const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
     }
 
     const selectedCourses = courses.flat(1);
-    const coursesInSemesters = courseData.value.semesters.map((semester) => {
-        semester = JSON.parse(JSON.stringify(semester));
-        semester.courses = selectedCourses.filter((course) => {
-            if (course.selected_semester) {
-                //@ts-ignore
-                return course.selected_semester.id === semester.id;
-            }
-        });
-
-        return semester;
+    const coursesInSemester: ISemester[] = courseData.value.semesters.map((semester) => {
+        const courses = selectedCourses.filter((course) => course.selected_semester.id === semester.id);
+        return {
+            ...semester,
+            courses: courses,
+        };
     });
-    const coursesInLater = [
-        {
-            name: 'later',
-            courses: selectedCourses.filter((course) => {
-                return course.selected_semester === 'later';
-            }),
-        },
-    ];
-    return [...coursesInSemesters, ...coursesInLater];
+    coursesInSemester.push({
+        id: 0,
+        name: 'later',
+        courses: selectedCourses.filter((course) => {
+            return course.selected_semester === 'later';
+        }),
+    });
+
+    return coursesInSemester;
 });
 
 //Warning
@@ -247,7 +244,9 @@ const blockCoursesAtEndOfSemester: ComputedRef<ISemester | null> = computed(() =
     if (!semesterWithCourses.value) {
         return null;
     }
-    const semester = semesterWithCourses.value[semesterWithCourses.value.length - 2];
+    const semester: ISemester = JSON.parse(
+        JSON.stringify(semesterWithCourses.value[semesterWithCourses.value.length - 2])
+    );
 
     semester.courses = semester.courses.filter((course) => {
         if (course.block) {
@@ -296,9 +295,16 @@ async function createPdf() {
             icon: 'error',
             confirmButtonText: 'OK',
         });
+        return;
     }
     const filename = await axios.post('/pdf', pdfData.value);
     window.open(env.VITE_BACKEND_URL + '/' + filename.data);
+}
+function resetData() {
+    modulesOutside.value = [];
+    masterThesis.value = { start: { start: null, end: '' }, theses: [], furtherDetails: '' };
+    additionalComments.value = '';
+    doubleDegree.value = false;
 }
 
 function getErrorHtml(errors: any) {

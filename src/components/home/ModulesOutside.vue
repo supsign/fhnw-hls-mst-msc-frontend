@@ -8,7 +8,6 @@
                 <NumberInput label="ECTS" type="number" :min="0" v-model="module.ects" />
                 <Input label="University" v-model="module.university" />
                 <div
-                    v-if="index"
                     @click="modulesOutsideArray.splice(index, 1)"
                     class="transition transform duration-300 ease-in-out text-white py-1 px-4 rounded-md shadow-sm bg-red-600 hover:bg-red-700 hover:shadow-xl cursor-pointer h-10 flex items-center mt-6"
                 >
@@ -38,7 +37,7 @@ const props = defineProps({
 });
 const emits = defineEmits(['updateModulesOutsideData']);
 const description: IText | null = props.texts.find((text) => text.name === 'modules_outside_description') || null;
-const modulesOutsideArray: Ref<Array<IModuleOutside>> = ref([{ title: '', ects: 0, university: '' }]);
+const modulesOutsideArray: Ref<Array<IModuleOutside>> = ref([]);
 
 function addNewModule() {
     modulesOutsideArray.value.push({ title: '', ects: 0, university: '' });
