@@ -301,6 +301,8 @@ async function createPdf() {
 function resetData() {
     modulesOutside.value = [];
     masterThesis.value = { start: { start: null, end: '' }, theses: [], furtherDetails: '' };
+    additionalComments.value = '';
+    doubleDegree.value = false;
 }
 
 function getErrorHtml(errors: any) {
