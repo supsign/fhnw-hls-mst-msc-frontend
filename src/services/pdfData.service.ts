@@ -38,7 +38,7 @@ interface ISelectedCoursesForPdf {
 }
 
 interface IThesisForPdf {
-    time_frame: IThesisTimeFrame;
+    time_frames: IThesisTimeFrame;
     theses: number[];
     further_details: string;
 }
@@ -74,7 +74,7 @@ function parseMasterThesis(masterThesis: IThesisSelection): IThesisForPdf | null
         return null;
     }
     return {
-        time_frame: masterThesis.start,
+        time_frames: masterThesis.start,
         theses: masterThesis.theses.map((theses) => {
             return theses.id;
         }),
