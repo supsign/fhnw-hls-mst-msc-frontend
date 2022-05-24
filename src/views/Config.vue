@@ -22,10 +22,7 @@
 </template>
 
 <script setup lang="ts">
-import axios from 'axios';
 import Card from '../components/base/Card.vue';
 import Input from '../components/base/Input.vue';
-import { ref } from 'vue';
-
 const env = import.meta.env;
 </script>
