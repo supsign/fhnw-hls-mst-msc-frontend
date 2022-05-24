@@ -214,6 +214,7 @@ const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
         };
     });
     coursesInSemester.push({
+        id: 0,
         name: 'later',
         courses: selectedCourses.filter((course) => {
             return course.selected_semester === 'later';

@@ -19,7 +19,7 @@ interface pdfDataServiceInput {
     groupsWithSelectedCourses: ICourseGroup[];
     overlappingCourses: ISemesterWithOverlappingCourses[];
 }
-interface parsedPdfDataInput {
+export interface parsedPdfDataInput {
     surname: string;
     given_name: string;
     semester: ISemester;
@@ -64,7 +64,7 @@ export function pdfDataService(data: pdfDataServiceInput) {
     const validator = validateData(parsedData);
 
     if (!validator.amount) {
-        delete parsedData.statistics.moduleGroupCount;
+        parsedData.statistics.moduleGroupCount = [];
         return parsedData;
     }
     return validator;
@@ -74,8 +74,7 @@ function parseMasterThesis(masterThesis: IThesisSelection): IThesisForPdf | null
         return null;
     }
     return {
-        //@ts-ignore
-        time_frames: masterThesis.start,
+        time_frame: masterThesis.start,
         theses: masterThesis.theses.map((theses) => {
             return theses.id;
         }),
