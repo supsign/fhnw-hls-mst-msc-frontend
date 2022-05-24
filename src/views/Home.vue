@@ -295,6 +295,7 @@ async function createPdf() {
             icon: 'error',
             confirmButtonText: 'OK',
         });
+        return;
     }
     const filename = await axios.post('/pdf', pdfData.value);
     window.open(env.VITE_BACKEND_URL + '/' + filename.data);
