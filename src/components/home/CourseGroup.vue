@@ -79,7 +79,7 @@
                     class="flex justify-end"
                     :class="[count < group.required_courses_count ? 'text-red-600' : 'text-green-600']"
                 >
-                    Required {{ count }}/{{ group.required_courses_count }}
+                    Chosen {{ count }} / Required {{ group.required_courses_count }}
                 </div>
             </div>
         </template>

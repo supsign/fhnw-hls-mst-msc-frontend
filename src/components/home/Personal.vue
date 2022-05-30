@@ -5,7 +5,7 @@
         <Input label="Surname" v-model="value.surname" />
         <Input label="Given Name" v-model="value.givenName" />
         <Select
-            label="Semester"
+            label="Start of Studies"
             :options="data.semesters"
             v-model="value.semester"
             @change="emits('getCourseData')"
