@@ -23,7 +23,7 @@
             </div>
         </div>
         <div v-if="masterThesis.start.start">
-            Possible Timeframe of Thesis: {{ masterThesis.start.start.long_name }} -
+            Possible Time Frame of Thesis: {{ masterThesis.start.start.long_name }} -
             {{ masterThesis.start.end }}
         </div>
     </div>
