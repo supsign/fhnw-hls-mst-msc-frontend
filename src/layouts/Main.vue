@@ -5,12 +5,9 @@
                 <div class="flex space-x-4">
                     <img
                         class="p-2 md:py-4 max-h-12 md:max-h-20"
-                        src="../assets/logos/fhnw-logo-klein.png"
+                        src="../assets/logos/fhnw_hls_e_10mm.png"
                         alt="Logo FHNW"
                     />
-                    <div class="my-auto text-lg text-black hover:text-black">
-                        MSc in Life Sciences FHNW – Plan your studies
-                    </div>
                 </div>
             </div>
         </div>
@@ -21,7 +18,12 @@
     </main>
     <footer class="p-2 fixed bottom-0 w-full text-xs text-white bg-gray-700">
         <div class="text-center sm:flex sm:justify-between">
-            <a href="https://supsign.ch" target="_blank" rel="noopener noreferrer" class="block mb-2 sm:mb-0">
+            <a
+                href="https://supsign.ch"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="block mb-2 sm:mb-0 text-white no-underline hover:text-white"
+            >
                 &copy; Made with &hearts; in Switzerland by Supsign AG
             </a>
         </div>
