@@ -22,7 +22,8 @@
                 <div class="text-gray-400">
                     <p>School of Life Sciences FHNW</p>
                     <p>Institute for Chemistry and Bioanalytics</p>
-                    <p>Hofackerstrasse 30 :: 4132 Muttenz</p>
+                    <p>Hofackerstrasse 30</p>
+                    <p>4132 Muttenz</p>
                     <br />
                     <p>
                         Prof. Dr. Georg Lipps
