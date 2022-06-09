@@ -12,20 +12,40 @@
             </div>
         </div>
     </div>
-    <img class="object-cover w-full max-h-20" src="../assets/impression/impression.jpg" alt="Logo Impression" />
     <main class="h-screen">
         <router-view />
     </main>
-    <footer class="p-2 fixed bottom-0 w-full text-xs text-white bg-gray-700">
-        <div class="text-center sm:flex sm:justify-between">
-            <a
-                href="https://supsign.ch"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="block mb-2 sm:mb-0 text-white no-underline hover:text-white"
-            >
-                &copy; Made with &hearts; in Switzerland by Supsign AG
-            </a>
+    <footer class="p-2 w-full text-white bg-black">
+        <div class="flex justify-start py-5 mx-auto container border-b">
+            <div>
+                <div class="text-lg my-1">Contact</div>
+                <div class="text-gray-400">
+                    <p>School of Life Sciences FHNW</p>
+                    <p>Institute for Chemistry and Bioanalytics</p>
+                    <p>Hofackerstrasse 30 :: 4132 Muttenz</p>
+                    <br />
+                    <p>
+                        Prof. Dr. Georg Lipps
+                        <a
+                            href="https://www.fhnw.ch/en/people/georg-lipps/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-gray-400 hover:text-gray-300"
+                            >https://www.fhnw.ch/en/people/georg-lipps</a
+                        >
+                    </p>
+                    <p>
+                        E-mail:
+                        <a
+                            href="mailto:georg.lipps@fhnw.ch"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="text-gray-400 hover:text-gray-300"
+                            >georg.lipps@fhnw.ch</a
+                        >
+                    </p>
+                </div>
+            </div>
         </div>
     </footer>
 </template>
