@@ -6,7 +6,7 @@
         <Input label="Given Name" v-model="value.givenName" />
         <Select
             label="Start of Studies"
-            :options="data.semesters"
+            :options="semesters"
             v-model="value.semester"
             @change="emits('getCourseData')"
             option_labels="long_name_with_short"
@@ -70,7 +70,7 @@ function prefillValues(data: IPersonalDataResponse) {
 
 const semesters = computed(() => {
     const current = data.value.semesters.find((semester: any) => semester.is_current);
-    data.value.semesters.map((semester: any) => {
+    return data.value.semesters.map((semester: any) => {
         if (dayjs(semester.start_date).isBefore(dayjs(current.start_date))) {
             semester.long_name_with_short += ' (replanning of already started studies)';
         }
