@@ -65,7 +65,7 @@ const warningBlock = ref<HTMLInputElement | null>(null);
 const personalData: Ref<IPersonalData> = ref({
     surname: '',
     givenName: '',
-    semester: null,
+    semester: undefined,
     studyMode: null,
     specialization: null,
 });
@@ -219,6 +219,7 @@ const semesterWithCourses: ComputedRef<ISemester[]> = computed(() => {
         courses: selectedCourses.filter((course) => {
             return course.selected_semester === 'later';
         }),
+        is_current: false,
     });
 
     return coursesInSemester;

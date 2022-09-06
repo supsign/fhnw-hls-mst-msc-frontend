@@ -13,7 +13,7 @@ export interface IPersonalDataResponse {
 export interface IPersonalData {
     surname: string;
     givenName: string;
-    semester: ISemester | null;
+    semester: ISemester | undefined;
     specialization: ISpecialization | null;
     studyMode: { id: number; label: string } | null;
 }

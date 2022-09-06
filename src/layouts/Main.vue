@@ -19,7 +19,7 @@
                 <div>
                     <div class="text-lg my-1">Contact</div>
                     <div class="text-gray-400">
-                        <p>School of Life Sciences FHNW</p>
+                        <p>FHNW School of Life Sciences</p>
                         <p>Institute for Chemistry and Bioanalytics</p>
                         <p>Hofackerstrasse 30</p>
                         <p>4132 Muttenz</p>
