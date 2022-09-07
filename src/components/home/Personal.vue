@@ -6,7 +6,7 @@
         <Input label="Given Name" v-model="value.givenName" />
         <Select
             label="Start of Studies"
-            :options="data.semesters"
+            :options="semesters"
             v-model="value.semester"
             @change="emits('getCourseData')"
             option_labels="long_name_with_short"
@@ -35,6 +35,7 @@ import { IPersonalDataResponse, IPersonalData } from '../../interfaces/personal.
 import Input from '../base/Input.vue';
 import Select from '../base/Select.vue';
 import Introduction from './Introduction.vue';
+import dayjs from 'dayjs';
 
 const props = defineProps({
     modelValue: { type: Object as PropType<IPersonalData>, required: true },
@@ -63,7 +64,17 @@ async function getPersonalData() {
 }
 
 function prefillValues(data: IPersonalDataResponse) {
-    value.value.semester = data.semesters.length > 0 ? data.semesters[0] : null;
+    value.value.semester = data.semesters.find((semester) => semester.is_current);
     value.value.studyMode = data.studyMode.studyModes[0];
 }
+
+const semesters = computed(() => {
+    const current = data.value.semesters.find((semester: any) => semester.is_current);
+    return data.value.semesters.map((semester: any) => {
+        if (dayjs(semester.start_date).isBefore(dayjs(current.start_date))) {
+            semester.long_name_with_short += ' (replanning of already started studies)';
+        }
+        return semester;
+    });
+});
 </script>

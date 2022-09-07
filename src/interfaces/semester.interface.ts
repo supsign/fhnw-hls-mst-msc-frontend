@@ -4,6 +4,7 @@ import { IModel } from './model.interface';
 export interface ISemester extends IModel {
     is_autumn_semester?: boolean;
     is_spring_semester?: boolean;
+    is_current: boolean;
     long_name?: string;
     name: string;
     short_name?: string;
