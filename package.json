@@ -15,7 +15,7 @@
     "sass": "^1.51.0",
     "sweetalert2": "^11.7.10",
     "unplugin-vue-components": "^0.25.0",
-    "vue": "^3.2.25",
+    "vue": "^3.3.4",
     "vue-multiselect": "^3.0.0-alpha.2",
     "vue-router": "^4.0.15",
     "vue-select": "^4.0.0-beta.3",
