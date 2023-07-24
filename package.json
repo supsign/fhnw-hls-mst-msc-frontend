@@ -13,7 +13,7 @@
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.8",
     "sass": "^1.63.6",
-    "sweetalert2": "^11.7.10",
+    "sweetalert2": "^11.7.12",
     "unplugin-vue-components": "^0.25.0",
     "vue": "^3.3.4",
     "vue-multiselect": "^3.0.0-alpha.2",
