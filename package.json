@@ -12,7 +12,7 @@
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
-    "sass": "^1.64.1",
+    "sass": "^1.64.2",
     "sweetalert2": "^11.7.20",
     "unplugin-vue-components": "^0.25.0",
     "vue": "^3.3.4",
